@@ -49,6 +49,12 @@ TUXEDO (Tactical User-interfaces for eXtravehicular Exploration and Dynamic Opti
 
 ---
 
+## 📋 ExecPlan Workflow
+- For multi-day or cross-subsystem changes, author an ExecPlan using `docs/codex_exec_plans.md`.
+- Keep the plan updated as a living document so any teammate can resume work without extra context.
+
+---
+
 ## 🧪 HITL Testing Plan
 Human-in-the-Loop trials to validate:
 - Navigation accuracy & task efficiency
@@ -74,4 +80,3 @@ Human-in-the-Loop trials to validate:
 
 ## 📜 License
 MIT License — 2025 TUXEDO Team
-

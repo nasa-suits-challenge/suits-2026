@@ -1,0 +1,10 @@
+{
+  "name": "suits-2026",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "libs/*"
+  ],
+  "devDependencies": {}
+}

@@ -2,6 +2,8 @@
 
 > Starter scaffold for a SUITS team implementing **Pressurized Rover UI**, **Spacesuit UI**, and an **AI Assistant (AIA)** with Telemetry Stream Server (TSS) integration.
 
+![Tuxedo screenshot](docs/tuxedo.png)
+
 ## What’s inside
 - `docs/` — proposal outline, mission requirements, HITL test plan, outreach plan, budget and schedule templates.
 - `apps/ev-ui/` — Spacesuit display & voice UI app.

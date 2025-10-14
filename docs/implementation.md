@@ -21,10 +21,12 @@
 2. **PR UI & Autonomy (DUST)** — Lead: _TBD_  
 3. **Telemetry & Integration (TSS, UIA, DCU)** — Lead: _TBD_  
 4. **Human Factors & HITL** — Lead: _TBD_  
-5. **Outreach & Industry Engagement** — Lead: _TBD_  
+5. **Outreach & Industry Engagement** — Lead: _TBD_
 6. **Proposal/Docs & Admin** — Lead: _TBD_
 
 Each lead maintains a backlog, weekly demo, and Definition of Done (DoD).
+
+> **NASA pairing model:** Selected teams are assigned to either the spacesuit or pressurized rover asset and paired with a complementary team for interoperability. Leads will lock once NASA confirms our asset so responsibilities align with the official assignment.
 
 ---
 
@@ -39,10 +41,12 @@ Each lead maintains a backlog, weekly demo, and Definition of Done (DoD).
 - Hardware decision: HoloLens 2 vs rugged tablet; PR workstation spec.
 - Repo + CI; code standards; telemetry client scaffolding; UI shells for EV and PR.
 - Draft test sites and safety checklist for night testing.
+- Confirm all team members are enrolled in STEM Gateway and scheduled for the mandatory Dec 11 orientation per NASA guidelines.
 
 ### Phase 2 — Telemetry & AIA Alpha (Dec → Jan 2026)
 - Integrate **TSS** (WebSocket) with EV and PR; mock feeds until TSS live.
 - AIA v1: deterministic intents + speech I/O; concise readouts; procedure runner alpha.
+- Establish integration cadence with the paired team once NASA releases asset assignments.
 
 ### Phase 3 — Mapping & Autonomy Beta (Jan → Feb 2026)
 - EV: 2D minimap, breadcrumbs, drop‑pins, predictive range ring.
@@ -115,6 +119,7 @@ Flights $4,500; Hotel $2,000; Ground $400; Operating $600; Software $500; Misc $
 | Device availability | M | H | Early request; tablet fallback | PM |
 | Night visibility | M | H | High contrast theme; headlamp testing | HF Lead |
 | Speech noise | M | M | Push‑to‑talk; noise model tuning | AIA Lead |
+| Partner team misalignment | M | M | Weekly syncs once NASA pairs teams; shared POI/API contracts; joint dry-run before SDR | PM |
 
 ---
 

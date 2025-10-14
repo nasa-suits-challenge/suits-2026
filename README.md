@@ -10,13 +10,6 @@
 - `libs/tss-client/` — TypeScript WebSocket client for TSS (JSON/GeoJSON).
 - `.github/` — issue templates, PR template, labels.
 
-## Quick start
-1. Create a new repo in your org: **nasa-suits-challenge/suits-2026**.
-2. Download this zip and extract into the repo root.
-3. Run: `npm i` (optional for libs), then open the `docs/PROPOSAL_OUTLINE.md` and start drafting.
-4. Push to GitHub and set up branch protections (`main`) + required reviews.
-
----
 
 ### Suggested Repos (if you prefer multi-repo instead of a monorepo)
 - `suits-2026` (monorepo — recommended to start)

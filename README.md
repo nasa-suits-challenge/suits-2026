@@ -1,4 +1,4 @@
-# NASA SUITS 2025–2026 — Team Starter Repo
+# TUXEDO: Tactical User-interfaces for eXtravehicular Exploration and Dynamic Optimization 
 
 > Starter scaffold for a SUITS team implementing **Pressurized Rover UI**, **Spacesuit UI**, and an **AI Assistant (AIA)** with Telemetry Stream Server (TSS) integration.
 

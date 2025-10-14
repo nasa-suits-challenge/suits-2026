@@ -1,8 +1,6 @@
-# TUXEDO: Tactical User-interfaces for eXtravehicular Exploration and Dynamic Optimization 
+![Tuxedo screenshot](docs/tuxedo.png)
 
 > Starter scaffold for a SUITS team implementing **Pressurized Rover UI**, **Spacesuit UI**, and an **AI Assistant (AIA)** with Telemetry Stream Server (TSS) integration.
-
-![Tuxedo screenshot](docs/tuxedo.png)
 
 ## What’s inside
 - `docs/` — proposal outline, mission requirements, HITL test plan, outreach plan, budget and schedule templates.

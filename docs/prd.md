@@ -7,11 +7,13 @@
 ---
 
 ## 1) Purpose & Goals
-Design, implement, and test a dual-asset solution for the 2025–2026 NASA SUITS challenge:
-- **Spacesuit UI + AIA**: An astronaut-facing display with a natural-language **Artificial Intelligence Assistant (AIA)** that reduces cognitive load during **Egress → EV Navigation → LTV Repair → Ingress**.
-- **Pressurized Rover UI + Autonomy**: A control and decision-support UI operating in **DUST (Unreal)** with autonomous search, path planning, hazard avoidance, resource management, and PR–EV interoperability.
+Design, implement, and test a solution that satisfies the FY26 NASA SUITS challenge requirements for the assigned asset while planning for cross-team interoperability:
+- **Spacesuit UI + AIA (if assigned):** An astronaut-facing display with a natural-language **Artificial Intelligence Assistant (AIA)** that reduces cognitive load during **Egress → EV Navigation → LTV Repair → Ingress**.
+- **Pressurized Rover UI + Autonomy (if assigned):** A control and decision-support UI operating in **DUST (Unreal)** with autonomous search, path planning, hazard avoidance, resource management, and PR–EV interoperability.
 
-> **Success criteria (top-level):** Demonstrate intuitive, reliable UIs; robust autonomy; and effective, concise voice interactions; while meeting all “_shall_” requirements and most “_should_” requirements across both assets.
+> **Context:** NASA SUITS selects onsite teams to focus on either the spacesuit or the pressurized rover and pairs them with a complementary team. Our PRD captures the end-to-end mission expectations so we can deliver the assigned asset and integrate smoothly with our partner.
+
+> **Success criteria (top-level):** Demonstrate intuitive, reliable UIs; robust autonomy or EVA assistance (depending on asset); and effective, concise voice interactions, while meeting all official “_shall_” requirements and most “_should_” requirements for the selected asset.
 
 ---
 
@@ -19,7 +21,7 @@ Design, implement, and test a dual-asset solution for the 2025–2026 NASA SUITS
 - **EV astronaut** (Spacesuit UI) operating outdoors in the JSC Rock Yard at night under uneven lighting; must maintain situational awareness, walk safely, and complete procedures efficiently.
 - **PR crew** (Pressurized Rover) operating a simulated rover within DUST; must plan search patterns, monitor consumables, and coordinate with the EV.
 
-**Operational phases:** _Initial Scene_ → _PR Navigation & Search_ → _Egress_ → _EV Navigation_ → _LTV Repair_ → _Ingress_.
+**Operational phases:** _Initial Scene_ → _PR Navigation & Search_ → _Egress_ → _EV Navigation_ → _LTV Repair_ → _Ingress_. NASA conducts onsite testing at the JSC Rock Yard at night, so the UI must remain legible under low-light, uneven terrain conditions.
 
 ---
 
@@ -66,16 +68,20 @@ Design, implement, and test a dual-asset solution for the 2025–2026 NASA SUITS
 
 ## 7) Functional Requirements & Acceptance Criteria
 ### 7.1 Pressurized Rover (PR)
-1. **Control in DUST:** Drive via autonomy with manual override.  
+1. **Control in DUST:** Drive via autonomy with manual override.
    _Acceptance:_ PR can start, pause, resume mission; execute path segments; operator can interject waypoints.
-2. **2D Live Map:** Show PR/EV/LTV; search radius; planned pattern; POIs; mission timer.  
-   _Acceptance:_ Map updates ≥2 Hz; add/view shared POIs; toggle layers.
-3. **Autonomous Navigation:** Best‑path, obstacle avoidance, updated destinations from TSS.  
-   _Acceptance:_ Finds LTV search sector; replans around hazards within 2 s of detection.
-4. **Resource Utilization:** Track power/consumables; predictive analytics; AIA verbal status.  
-   _Acceptance:_ Provides current/ETA/turn‑back suggestion; issues C&W on off‑nominal.
-5. **Caution & Warning:** Visual tiering (Advisory/Warning/Caution); audible chirps; AIA recommended procedure.  
-   _Acceptance:_ Triggered by threshold scripts; displays procedure link; logs event.
+2. **Spacesuit Telemetry Mirror:** Make EV biomedical and suit system data easily accessible within the PR console.
+   _Acceptance:_ Core vitals and suit states stream from TSS; thresholds align with EVA alerting; data refresh ≥2 Hz.
+3. **LTV Telemetry:** Present beacon status, signal strength, and derived search cues in the UI.
+   _Acceptance:_ Beacon telemetry appears within 1 s of receipt; operators can view historic signal strength versus time.
+4. **Task Procedures:** Surface task procedures (e.g., Egress, LTV Repair) remain a tap away for PR operators to reference.
+   _Acceptance:_ Procedure cards searchable and filterable; step context shown within 2 interactions.
+5. **2D Live Map & Mission Timers:** Show PR/EV/LTV positions, search radius, planned pattern, breadcrumbs, POIs, and elapsed mission timers.
+   _Acceptance:_ Map updates ≥2 Hz; users can add/view shared POIs and toggle layers; mission elapsed time displays as HH:MM:SS and stays synchronized with TSS timer.
+6. **Autonomous Navigation:** Compute best paths, detect/avoid hazards, ingest updated destinations from TSS, and visualize asset states including rover speed, angle, and heading.
+   _Acceptance:_ Finds LTV search sector; replans around hazards within 2 s of detection; exposes live speed/heading readouts.
+7. **Autonomous Resource Utilization:** Track rover systems and consumables, deliver predictive analytics, surface caution/warning cues, and drive natural-language AIA readouts.
+   _Acceptance:_ Provides current/ETA/turn-back suggestion; issues C&W on off-nominal states; AIA verbalizes numeric status with unit context.
 
 ### 7.2 Spacesuit UI
 1. **EV Telemetry & Biomeds:** Always‑visible core vitals; expandable panels.  
@@ -88,8 +94,8 @@ Design, implement, and test a dual-asset solution for the 2025–2026 NASA SUITS
    _Acceptance:_ Playbook shown within 1 tap/command; acknowledgement required.
 
 ### 7.3 Interoperability
-- **Shared data:** POIs, search overlays, LTV “warmer/colder” signal, timers.
-- **Consistency checks:** Differences reconciled with “last‑writer‑wins” and user confirmation for conflicts.
+- **Shared data:** POIs, search overlays, LTV “warmer/colder” signal, timers, and mission status exchanged with the paired NASA-assigned team.
+- **Consistency checks:** Differences reconciled with “last‑writer‑wins” and user confirmation for conflicts; coordination cadence established with the partner team during pre-test syncs.
 
 ---
 

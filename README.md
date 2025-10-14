@@ -11,10 +11,4 @@
 - `.github/` — issue templates, PR template, labels.
 
 
-### Suggested Repos (if you prefer multi-repo instead of a monorepo)
-- `suits-2026` (monorepo — recommended to start)
-- `suits-aia`
-- `suits-ev-ui`
-- `suits-pr-ui`
-- `suits-tss-client`
-- `suits-ops` (PM, docs, HITL)
+

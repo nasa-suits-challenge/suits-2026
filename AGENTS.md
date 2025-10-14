@@ -1,5 +1,9 @@
 # Repository Guidelines
 
+# ExecPlans
+
+When writing complex features or significant refactors, use an ExecPlan (as described in ./docs/PLANS.md) from design to implementation.
+
 ## Project Structure & Module Organization
 The monorepo uses npm workspaces and groups deliverables by role. `apps/ev-ui/` contains the EVA display layer (AR/tablet). `apps/pr-ui/` hosts the rover console. `services/aia/` is the voice and guardrail service. Shared TypeScript lives in `libs/tss-client/` with WebSocket glue for NASA TSS. Long-form references and assets (plans, briefs, imagery) stay under `docs/`. Keep new workspaces shallow: place runtime source in `<workspace>/src/` and document entry points in the workspace README.
 

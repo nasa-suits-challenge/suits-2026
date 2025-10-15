@@ -152,7 +152,3 @@ Alternative on‑suit: Qwen‑2.5‑14B‑Instruct (Q4_K_M ~11 GB) with smaller 
 | **Qwen 2.5 14B** | 14B | Native (OpenAI schema) | Apache 2.0 | 500 – 1000 ms | Excellent tool agent; more RAM |
 | **Gemma 3 12B** | 12B | Partial (prompt based) | Apache 2.0 | 600 – 1100 ms | Great context window; less tool-tuned |
 
-### 🚀 Recommended Stack for FY26 SUITS AIA
-1. **Local default:** `gpt-oss-20b (Q4_K_M)` → tools & function calls natively.  
-2. **Light fallback:** `llama-3.1-8b (Q4_K_M)` → grammar-bound JSON for determinism.  
-3. **Optional alternate:** `qwen-2.5-14b (Q4_K_M)` → enhanced tool-planning mode if VRAM allows.  

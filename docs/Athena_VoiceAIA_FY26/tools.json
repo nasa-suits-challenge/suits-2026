@@ -1,0 +1,8 @@
+{
+  "tools": [
+    {"name": "get_telemetry", "phase": ["Egress","EVNav","LTV","Ingress"], "kind": "read"},
+    {"name": "advance_step", "phase": ["Egress","LTV","Ingress"], "kind": "write", "requires_ptt": true},
+    {"name": "get_bearing_to", "phase": ["EVNav","Ingress"], "kind": "read"},
+    {"name": "plan_route", "phase": ["EVNav"], "kind": "read", "granted_on_request": true, "requires_link": "GREEN"}
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "templates": {
+    "status_o2": "Primary O₂ {o2_primary_pct}% — Secondary {o2_secondary_pct}%.",
+    "bearing_simple": "Bearing {bearing_deg} degrees, {distance_m} meters.",
+    "step_read": "Step {index}: {text}.",
+    "step_advanced": "Step {from_index} complete. Proceed to step {to_index}.",
+    "marker_set": "Marker {label} set."
+  }
+}

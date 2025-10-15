@@ -18,6 +18,45 @@ It delivers low-latency, deterministic voice guidance for astronauts through a *
 
 All EVA-critical functions run **locally on the suit**, with HAL and Earth tiers providing optional enhancements when network conditions allow.
 
+## 🧠 GPT-OSS-20B — Local Suite Model Spec (Recommended Upgrade)
+
+**Model:** `gpt-oss-20b`  
+**License:** Apache 2.0 (fully open-source)  
+**Size:** 20 billion parameters  
+**Memory footprint:** ≈ 15 – 16 GB (fits a 16 GB device with quantization, e.g. Q4_K_M or Q5_K_M)  
+**Runtime:** Compatible with `llama.cpp`, `vLLM`, `Ollama`, or OpenAI-compatible API endpoints  
+**Context:** up to 32 K tokens  
+**Latency (local CPU + GPU hybrid):** ~ 1 s for ≤ 10 tokens on a laptop-class GPU; < 700 ms on a desktop RTX 3060/4070  
+**Languages:** English-tuned but strong multilingual generalization  
+**Quantizations:** GGUF Q4_K_M (≈ 10 GB), Q5_K_M (≈ 13 GB), BF16 (≈ 32 GB full precision)
+
+### 🔧 Native Capabilities
+- ✅ **Tool use / Function calling:** OpenAI-style schema (`tools`, `tool_choice`, `tool_calls`)  
+- ✅ **Web browsing & retrieval hooks:** designed for plug-in agent runtimes  
+- ✅ **Structured JSON / grammar-constrained output**  
+- ✅ **Strong short-context reasoning & low hallucination**  
+- ✅ **Drop-in OpenAI API compatibility** for local deployments
+
+### 🪶 Recommended EVA Configuration
+| Component | Setting |
+|------------|----------|
+| **Runtime** | `llama.cpp-server` or `Ollama` with OpenAI-compat API |
+| **Context** | 2 K – 4 K active (sliding) |
+| **Temp / Top-P** | 0.2 – 0.4 / 0.9 |
+| **Max new tokens** | ≤ 16 |
+| **Function call interface** | native `tools` schema |
+| **Speech out** | templates only (`say(template_id, slots)`) |
+| **Safety** | phase-aware; `ptt_held` or confirm intent required for writes |
+
+### 🛰️ Comparison
+
+| Model | Params | Function Calling | License | Offline Perf (8 core + GPU) | Notes |
+|-------|---------|------------------|----------|-------------------------------|-------|
+| **GPT-OSS-20B** | 20B | ✅ Native (OpenAI schema) | Apache 2.0 | 400 – 900 ms | Best open function-caller w/ license freedom |
+| **Llama 3.1 8B** | 8B | Via grammar/Ollama | Meta license | 300 – 700 ms | Lightweight, deterministic |
+| **Qwen 2.5 14B** | 14B | Native (OpenAI schema) | Apache 2.0 | 500 – 1000 ms | Excellent tool agent; more RAM |
+| **Gemma 3 12B** | 12B | Partial (prompt based) | Apache 2.0 | 600 – 1100 ms | Great context window; less tool-tuned |
+
 ---
 
 ## ⚙️ Core Features
@@ -133,45 +172,3 @@ docs/Athena_VoiceAIA_FY26/
 
 **Athena Voice AIA**  
 “Context-aware, tool-first intelligence for safe, resilient EVA operations.”
-
-
-## 🧠 GPT-OSS-20B — Local Suite Model Spec (Recommended Upgrade)
-
-**Model:** `gpt-oss-20b`  
-**License:** Apache 2.0 (fully open-source)  
-**Size:** 20 billion parameters  
-**Memory footprint:** ≈ 15 – 16 GB (fits a 16 GB device with quantization, e.g. Q4_K_M or Q5_K_M)  
-**Runtime:** Compatible with `llama.cpp`, `vLLM`, `Ollama`, or OpenAI-compatible API endpoints  
-**Context:** up to 32 K tokens  
-**Latency (local CPU + GPU hybrid):** ~ 1 s for ≤ 10 tokens on a laptop-class GPU; < 700 ms on a desktop RTX 3060/4070  
-**Languages:** English-tuned but strong multilingual generalization  
-**Quantizations:** GGUF Q4_K_M (≈ 10 GB), Q5_K_M (≈ 13 GB), BF16 (≈ 32 GB full precision)
-
-### 🔧 Native Capabilities
-- ✅ **Tool use / Function calling:** OpenAI-style schema (`tools`, `tool_choice`, `tool_calls`)  
-- ✅ **Web browsing & retrieval hooks:** designed for plug-in agent runtimes  
-- ✅ **Structured JSON / grammar-constrained output**  
-- ✅ **Strong short-context reasoning & low hallucination**  
-- ✅ **Drop-in OpenAI API compatibility** for local deployments
-
-### 🪶 Recommended EVA Configuration
-| Component | Setting |
-|------------|----------|
-| **Runtime** | `llama.cpp-server` or `Ollama` with OpenAI-compat API |
-| **Context** | 2 K – 4 K active (sliding) |
-| **Temp / Top-P** | 0.2 – 0.4 / 0.9 |
-| **Max new tokens** | ≤ 16 |
-| **Function call interface** | native `tools` schema |
-| **Speech out** | templates only (`say(template_id, slots)`) |
-| **Safety** | phase-aware; `ptt_held` or confirm intent required for writes |
-
-### 🛰️ Comparison
-
-| Model | Params | Function Calling | License | Offline Perf (8 core + GPU) | Notes |
-|-------|---------|------------------|----------|-------------------------------|-------|
-| **GPT-OSS-20B** | 20B | ✅ Native (OpenAI schema) | Apache 2.0 | 400 – 900 ms | Best open function-caller w/ license freedom |
-| **Llama 3.1 8B** | 8B | Via grammar/Ollama | Meta license | 300 – 700 ms | Lightweight, deterministic |
-| **Qwen 2.5 14B** | 14B | Native (OpenAI schema) | Apache 2.0 | 500 – 1000 ms | Excellent tool agent; more RAM |
-| **Gemma 3 12B** | 12B | Partial (prompt based) | Apache 2.0 | 600 – 1100 ms | Great context window; less tool-tuned |
-
-

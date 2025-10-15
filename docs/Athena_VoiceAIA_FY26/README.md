@@ -14,7 +14,7 @@ It delivers low-latency, deterministic voice guidance for astronauts through a *
 |------|-----------|-----------|
 | **1️⃣ Earth Megacompute** | NASA mission control | Long-range planning, model updates |
 | **2️⃣ HAL Moonbase** | DGX Spark (openai/gpt-oss-120B) | High-performance reasoning, route planning |
-| **3️⃣ On-Suit Core** | Rugged laptop + pass-through AR HMD | Real-time STT→Intent→TTS loop, telemetry fusion, procedural assistance |
+| **3️⃣ On-Suit Core** | Rugged laptop + pass-through AR HMD (openai/gpt-oss-20B) | Real-time STT→Intent→TTS loop, telemetry fusion, procedural assistance |
 
 All EVA-critical functions run **locally on the suit**, with HAL and Earth tiers providing optional enhancements when network conditions allow.
 

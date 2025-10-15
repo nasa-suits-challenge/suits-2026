@@ -49,7 +49,7 @@ Output format (strict JSON):
   "template": { "id": "...", "slots": { ... } },
   "request_capability": "optional_tool_name_if_needed"
 }
-
+'''
 ---
 
 ## 4) Tool API (core subset)

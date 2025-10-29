@@ -15,7 +15,8 @@ Tess Johnson \--- tess.johnson-1@colorado.edu \--- 2027 / Aerospace Engineering 
  Lynzee Hoegger \--- lynzee.hoegger@colorado.edu \--- 2025 / Aerospace Engineering  
 Rupkuvarba Rathod \--- rura4902@colorado.edu \--- 2026 / Aerospace Engineering  
  Sciences Bioastronautics  
- Shubhakriti Gupta \--- shgu7324@colorado.edu \--- 2027 / Aerospace Engineering Sciences
+ Shubhakriti Gupta \--- shgu7324@colorado.edu \--- 2027 / Aerospace Engineering Sciences  
+Schelin Ireland \--- schelin.ireland@colorado.edu \--- 2027 / Aerospace Engineering Sciences
 
  Advisor Name Email Address Phone Number
 
@@ -116,7 +117,7 @@ The map displays the planned route, assets, and a breadcrumb toggle. EV can drop
 
 * **Registration:** On first use, the HMD performs a quick spatial scan (pass‑through AR) to place anchors at known controls (UIA toggles, DCU knobs) and LTV access panels.  
 * **Detection & pose:** Tiny on‑device detectors propose 2D regions; depth/scene mesh from the HMD/tablet refines 3D pose. TSS booleans remain the truth for switch state; Computer Vision (CV) never overrides telemetry.  
-* **Step binding:** Each procedure step references **component IDs** (e.g., uia.oxy\_pri) tied to anchors. AGR renders the correct visual type and advances only when TSS confirms the state.  
+* **Step binding:** Each procedure step references component IDs (e.g., uia.oxy\_pri) tied to anchors. AGR renders the correct visual type and advances only when TSS confirms the state.  
 * **Interoperability:** AGR step state, POIs, and alerts sync over our PR↔EV JSON channel so both UIs remain consistent if connectivity hiccups occur. 
 
 **Devices.** Spacesuit display runs on a pass‑through AR HMD (e.g., HoloLens 2\) or a wrist tablet; PR runs on a workstation linked to DUST. All devices subscribe to TSS via WebSocket (JSON/GeoJSON); during Test Week they point to the SUITSNET host IP only (no internet). 
@@ -191,8 +192,9 @@ We share a small schema across PR↔EV for POIs, timers, warnings, and status. U
 * **Wrist mount tablet –** additional touchscreen input \+ screen display.  
 * **Rover workstation** — Rugged touchscreen for PR UI.  
 * **Edge laptop** —  Discrete GPU with ≥16 GB VRAM; runs an offline, quantized (GGUF) open‑source LLM (7–13B; 20B optional) for planning/RAG.  
-* **Nvidia DGX Spark** \-  HAL – 2001 space a odyssey   
-* **Comms** — WebSocket for shared pins/POIs between PR and EV.
+* **Comms** — WebSocket for shared pins/POIs between PR and EV.  
+* **HAL 9000**– optional, 2001 a space odyssey computer 
+
 
 ### **5.3 Concept of Operations (CONOPS) — AGR‑aware flow** 
 
@@ -254,7 +256,7 @@ We will build in phases: TSS client and UI shells, then search/pathfinding and p
 **Models & rationale (realistic compute).**
 
 * **On‑suit:** **Small ASR/TTS** and lightweight CV detectors (anchoring \+ safety cues). No large LLM on the HMD/tablet.  
-* **Edge/PR:** A **quantized 7–13B** LLM (or planner) for multi‑constraint reasoning (terrain × energy × time) and RAG over procedures; **20–30B** optional if an approved belt/rover compute pack is used.   
+* **Edge/PR:** A **quantized 7–13B** LLM (or planner) for multi‑constraint reasoning (terrain × energy × time) and RAG over procedures; 20–30B optional if an approved belt/rover compute pack is used.   
 * **Forecasting:** Light time‑series models predict consumables/range; deterministic budgets cross‑check and win if conservative.  
 * **Knowledge:** Local Knowledge Base (KB) includes UIA/DCU & LTV procedures, telemetry schema, and base maps. AGR steps bind directly to these artifacts.
 

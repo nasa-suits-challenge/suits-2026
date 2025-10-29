@@ -55,13 +55,13 @@ Rupkuvarba Rathod \--- rura4902@colorado.edu \--- 2026 / Aerospace Engineering
 * **Team Input Needed:** Final hardware list, differentiators, testing highlights.
 
 
-**Tuxedo** is a paired UI system for the spacesuit and the pressurized rover, connected by the Athena AI assistant. The aim is simple: help the crew complete the 2026 SUITS EVA: locate a silent Lunar Terrain Vehicle (LTV), diagnose and repair it, and return safely: faster, safer, and with lower cognitive load.
+**Tuxedo** is a paired UI system designed to integrate an EVA suit and pressurized rover with the Athena AI assistant. Its primary design goal is to assist the 2026 SUITS EVA in maneuvering lunar terrain to locate a lost Lunar Terrain Vehicle (LTV), facilitating on-foot navigation to the LTV, guiding ensuing damage diagnosis and repair, and enabling safe return the pressurized rover. To these ends, Tuxedo seeks to maximize crew safety and efficacy while minimizing operation time and crew cognitive load.
 
-On the rover, Tuxedo provides a clean 2D map with live assets, a search pattern around the LTV’s last known location, adaptive path planning, resource predictions with “turnaround” guidance, mission timers, caution/warning alerts, and quick drop‑pins. On the spacesuit, Tuxedo shows essential suit and bio telemetry, a 2D minimap with breadcrumb return, best‑path suggestions, drop‑pins, and concise voice guidance from Athena for UIA/DCU procedures and LTV repair steps. Both UIs consume the Telemetry Stream Server (TSS) in JSON/GeoJSON over WebSockets for PR/EV/LTV/UIA/DCU telemetry.
+On the rover, Tuxedo provides a clean 2D map with live assets, a search pattern around the LTV’s last known location, adaptive path planning, resource predictions with “turnaround” guidance, mission timers, caution/warning alerts, and quick drop‑pins. Within the EVA suit, Tuxedo conveys to the wearer essential suit and biomedical telemetry, a 2D “mini map" with breadcrumb return markers, optimal pathing suggestions, drop‑pins, and concise voice guidance from Athena for UIA/DCU procedures and LTV repair steps. Both UIs consume the Telemetry Stream Server (TSS) in JSON/GeoJSON over WebSockets for PR/EV/LTV/UIA/DCU telemetry.
 
-Athena answers natural‑language questions (“O₂ status?”) with short, numeric replies and cross‑checks mission‑critical outputs against TSS before speaking or displaying them. When navigation goals or suit status change, Athena updates routes, search patterns, and procedures with clear confirmation prompts. The design favors human‑in‑the‑loop control and sets guardrails to avoid hallucination risks. 
+Athena answers natural‑language questions (“O₂ status?”) with short, numeric replies and cross‑checks mission‑critical outputs against real-time TSS data before speaking or displaying them. When navigation goals or suit status change, Athena updates routes, search patterns, and procedures with clear confirmation prompts. The design prioritizes human‑in‑the‑loop control and sets guardrails to avoid hallucination risks. 
 
-We will test in night/low‑light conditions and with representative obstacles, following a HITL plan that measures task time, path accuracy, warnings, and crew workload. The spacesuit display will use a passthrough AR HMD or wrist tablet; the rover UI runs on a workstation tethered to DUST. All features directly trace to SUITS “shall” requirements for the PR and Spacesuit display.
+Tests will be conducted in night/low‑light conditions and with representative obstacles, following a HITL plan that measures task time, path accuracy, warnings, and crew workload. The spacesuit display will use a passthrough AR HMD or wrist tablet; the rover UI runs on a workstation tethered to DUST. All features directly trace to SUITS “shall” requirements for the PR and Spacesuit display.
 
 ### **5.2 Software & Hardware Design Description *(Rubric: Design Description 25 pts max)***
 
@@ -165,7 +165,8 @@ Both teams will be using this.
 
 ### **5.2.5 Hardware and Peripheral Devices**
 
-* **HoloLens 2 (Passthrough AR)** — Primary display for EVA; adjustable for low-light conditions per mission description, and wrist mount tablet.  
+* **HoloLens 2 (Passthrough AR)** — Primary display for EVA; adjustable for low-light conditions per mission description  
+* Wrist mount tablet.  
 * **Rover Workstation** — Ruggedized touchscreen interface with embedded compute.  
 * **Edge Compute Laptop**— Laptop with 16gb graphics processing to load GPT-OSS20b with gguf for on-device AI inference and local caching.  
 * **Communication Bus** — WebSocket to share POI between rover and eva  
@@ -232,40 +233,100 @@ Tasks:
 * Cite docs/PROJECT\_MANAGEMENT.md and docs/DEVICE\_SELECTION.md.  
 * **Team Input Needed:** Inventory of available hardware, lab access, fabrication partners.
 
-### **5.5 Artificial Intelligence Integration *(Rubric: AI Integration 15 pts)***
+### **5.5 Artificial Intelligence Integration — Athena AIA**
 
-* Describe model choices (LLMs, CV, speech), deployment strategy (edge vs. cloud), guardrails, hallucination mitigation, telemetry cross-checks.  
-* Align with docs/AI\_INTEGRATION.md and services/aia guardrail policies.  
-* **Team Input Needed:** Final model selection, licensing status, compute budgets.
+**Intent.** Our Artificial Intelligence Assistant (AIA), **Athena**, is designed as a *force multiplier* that lowers cognitive load and increases efficiency for both the EVA crew (EV) and the Pressurized Rover (PR) operators. It follows the SUITS mission guidance for concise, natural‑language interactions (e.g., “Primary O₂ 47%, Secondary 99%”), provides safe/efficient routing for EV and PR, and implements explicit guardrails to prevent hallucination‑driven behavior in mission‑critical contexts. 
 
+#### ***5.5.1 Where AI Runs and What It Does*** 
 
-**Rover:**
+Athena is a **two‑tier AI system** with a shared interoperability bus:
 
-**Speak simply, act never:** Athena answers with exact numbers or short clauses (“Primary O₂ 47%, Secondary 99%.”) and never performs actions without explicit EV/PR confirmation. 
+* **On‑Suit Node (EV AIA):** Runs on the wearable device (passthrough AR HMD or wrist tablet). Handles offline speech understanding/synthesis, ultra‑concise telemetry call‑and‑response, procedure step‑through, local hazard cues, breadcrumb backtrack, and POI drop pins. It never fabricates numbers—any numerical value is pulled directly from TSS telemetry.   
+* **Rover Node (PR AIA):** Runs on the PR workstation. Performs heavier decision support: search‑pattern planning to locate the LTV, autonomous path planning/hazard avoidance in DUST, time‑series forecasting of consumables, and mission “go/no‑go” recommendations with turn‑around points.   
+* **Interoperability Bus — “AthenaLink”:** A JSON schema and publish/subscribe channel that synchronizes telemetry, procedures, POIs, alerts, and status between EV and PR UIs. (AthenaLink builds on the team’s “Tuxedo System” modularity: Telemetry Interface, AI Core, UI Layer, Interoperability Bus, Edge Compute.) 
 
-**Plan/search:** Suggest search patterns and route updates that factor hazards, power, and time.
+**Data Source & Connectivity.** Both nodes consume the **Telemetry Stream Server (TSS)** over **WebSocket (ws)** with JSON/GeoJSON packets; during Test Week the TSS runs on SUITSNET and devices point at the provided local IP. This keeps Athena independent of internet connectivity. 
 
-**Procedures:** Retrieve steps for UIA/DCU and LTV repair; advance only on confirmation and TSS state validation.
+#### ***5.5.2 AI Capabilities by Mission Phase***
 
-**Local small LLM** for speech & procedure guidance; optional larger planner off‑device when available.
+Athena’s behaviors are bounded and role‑appropriate for each phase of the scenario: 
 
-**RAG**: Procedures, telemetry schema, and constraints indexed so Athena quotes the latest, local steps.
+* **PR Navigation & LTV Search (PR AIA):**  
+   *Autonomy & planning.* Generates/updates a standard search pattern from LTV last‑known position; fuses DUST terrain, LTV beacon strength, and rover resources to adjust the path; visualizes search radius and “warmer/colder” cues as the LTV responds to the wake‑up call. *Outputs:* route, ETA, energy/time budget, dynamic turn‑around advice.   
+* **Egress (EV AIA):**  
+   *Procedure guidance.* Presents UIA/DCU checklists with short voice prompts; verifies switch states via TSS Booleans; highlights the next control to touch. *Outputs:* “Step 3 complete—OXY PRIM selected.”   
+* **EV Navigation (EV AIA, with PR collaboration):**  
+   *Traverse safety.* Provides 2D mini‑map cues, breadcrumb return, drop‑pin, and hazard alerts under south‑pole lighting constraints; updates route as terrain/telemetry change. *Outputs:* concise, actionable turn‑by‑turn and off‑nominal warnings.   
+* **LTV Repair (EV AIA):**  
+   *Task execution.* Supplies ERM procedures, on‑demand diagnostics scripts, restart steps, and physical repair walkthroughs; locks non‑essential tasks when time is low. *Outputs:* step confirmation, success/failure states, next‑step branching.   
+* **Ingress (EV AIA):**  
+   *Safe return.* Computes best safe path home using remaining O₂/energy and breadcrumb trail; confirms final UIA/DCU post‑EVA settings. 
 
-**Telemetry cross‑check**: Any numeric or state claim must match TSS; otherwise Athena says, “I can’t verify that—check panel.” 
+#### ***5.5.3 Model Suite & Justification (What We Use and Why)***
 
-**Confidence & roles**: If confidence \< threshold, Athena offers choices, not directives.
+To meet on‑site, offline, and low‑latency requirements, we pair compact on‑device models with a heavier rover‑side planner:
 
-**No critical autonomy**: Caution/Warning yields a recommended step; human must confirm.
+* **Speech‑to‑Text (EV & PR):** On‑device neural ASR (small footprint) for robust, offline recognition of command phrases and telemetry queries; tuned grammar for mission terms (UIA/DCU labels, “ERM,” “ingress,” etc.).  
+* **Dialogue/Reasoning LLM (EV: 7–13B class; PR: 13–34B class):**  
+  * *EV Node:* A quantized **7–13B local LLM** optimized for **\<2 s** responses and **short completions**, to keep interactions brief and stable.  
+  * *PR Node:* A larger local model (13–34B) for multi‑constraint planning (terrain × energy × time), still fully offline on the PR workstation.  
+* **Computer Vision (EV):** Tiny object‑detection models for **UIA/DCU control highlighting** and basic hazard cues. These are gated by telemetry truth (e.g., CV never asserts a switch is set—TSS does).  
+* **Time‑Series Forecasting (PR & EV):** Lightweight seq2seq (or gradient‑boosted) models forecast **consumables/time‑to‑turnaround** for suit and rover; always cross‑checked by deterministic budget equations for redundancy.
 
-**Immutable rules**: Mission “shall” constraints compiled into prompts and code; Athena cannot override them.
+Model choices satisfy SUITS’ rubric to specify which AI models are used and why (latency, offline operation, safety). Final selections are guided by on‑device inference performance and evaluation during HITL (Section 5.7). 
 
-**EVA:**  
-Tasks:
+#### ***5.5.4 Knowledge, Tools, and RAG (How Athena Answers)***
 
-* This is probably just a paragraph or two  
-  * Build then integrate for voice command feature  
-  
+Athena follows a **tools‑first** pattern with **Retrieval‑Augmented Generation (RAG)**:
 
+* **Curated Knowledge Base:** EVA procedures (UIA/DCU, ERM, restart, repair), mission rules, telemetry schema, and map layers are indexed locally for retrieval. *(No open‑ended web sources.)*  
+* **Structured Tools:**  
+  * get\_telemetry(keypath) (values straight from TSS),  
+  * plan\_route(origin,dest,constraints) (A\* cost field, hazards),  
+  * predict\_resources(window) (time‑series forecaster \+ rule baseline),  
+  * checklist(step\_id) (procedure engine with state),  
+  * beacon\_bearing() (LTV signal fusion).  
+* **Strict Output Schemas:** LLM outputs are constrained to **JSON envelopes** for the UI (e.g., {utterance, evidence, tool\_calls, confidence}), enabling deterministic UI behavior and audit logs.
+
+This architecture aligns with SUITS’ emphasis on autonomy, interoperability, and explicit procedure support across EV and PR assets. 
+
+#### ***5.5.5 Guardrails & Hallucination Mitigation (Safety by Design)***
+
+Athena uses multiple, layered guardrails to prevent unsafe or untruthful behavior, addressing the Proposal Guidelines’ rubric for hallucination control. 
+
+1. **Source‑of‑Truth Separation.** Any **number** (e.g., O₂ %, battery, pressure, timers) is **read‑only from TSS** and rendered verbatim; the LLM cannot invent or overwrite values.   
+2. **Tools‑Before‑Talk.** For questions that require data, Athena **must call a tool** first. If no tool covers the request, it replies with a safe fallback (“Unavailable”) rather than guessing.  
+3. **Confidence Gating.** Each response carries a calibrated confidence. **\<0.8** requires either: (a) re‑ask with a narrower query, or (b) present **two options with rationale** and request user confirmation.  
+4. **Two‑Step Confirmation for Mission‑Critical Guidance.** Any suggestion involving routing, ERM, restarts, or return‑to‑PR triggers a **confirm‑reject** prompt and an **on‑screen checklist**. Human‑in‑the‑loop is mandatory.   
+5. **Deterministic Fallbacks.** If an LLM times out or fails, Athena emits **template responses** fed directly by tools (e.g., “Primary O₂ XX%, Secondary YY%. Next ERM step: …”).   
+6. **Cross‑Checks & Sanity Limits.** Route plans and range predictions are cross‑validated by **deterministic budget math** (energy, O₂, time) with conservative margins. If models disagree, the **most conservative** result wins and a caution is raised.  
+7. **Mode Awareness.** During egress/ingress, Athena restricts itself to **checklist‑only mode**; during traverse, it limits speech rate and only interrupts for **caution/warning** states per SUITS requirements. 
+
+#### ***5.5.6 Performance, Latency, and UX Targets***
+
+* **On‑Suit interactions:** ASR \< 300 ms to first word; end‑to‑end EV response \< 2 s for short answers; voice utterances kept to ≤5 seconds to maintain SUITS‑style brevity.   
+* **PR planning loops:** Route (re)plan within 1–3 s with incremental updates as terrain/beacon change.  
+* **Degraded comms:** If AthenaLink drops, EV and PR nodes continue operating independently on cached maps, procedures, and telemetry until the link recovers.
+
+#### ***5.5.7 Example Voice Exchanges (Representative)***
+
+* **Telemetry (EV):**  
+   *EV:* “Athena, O₂ status.”  
+   *Athena:* “Primary 47%, Secondary 99%.” *(pulled directly from TSS; concise form per SUITS)*   
+* **Search Update (PR):**  
+   *PR:* “Athena, update LTV search plan.”  
+   *Athena:* “Beacon bearing updated 15°. New route adds 140 m, \+3 min. Predicted rover margin 22% at arrival—confirm?”   
+* **Procedure (EV at LTV):**  
+   *EV:* “Start ERM.”  
+   *Athena:* “Step 1: Access panel A. Confirm when open.” *(next steps gated by TSS/UIA states; two‑step confirmation enforced)* 
+
+#### ***5.5.8 Interoperability & Responsibilities Across Assets***
+
+This integration cleanly divides responsibilities while enabling shared context (maps, POIs, cautions, timers) per the EVA vs. PR roles in SUITS. The EV AIA focuses on *personal safety and task execution*; the PR AIA focuses on *global planning, search, and asset coordination.* 
+
+#### ***5.5.9 Implementation Notes (from our “Tuxedo/Athena” Architecture)***
+
+We will implement Athena as a modular service with: **Telemetry Interface (TSS)**, **AI Core**, **UI Layer**, **AthenaLink bus**, and **Edge Compute**—supporting offline operation and low‑light/night testing at the Rock Yard. This leverages our existing “Tuxedo System” plan and naming (**Athena**) already adopted in our draft, while bringing it into full alignment with SUITS mission guidance.
 
 ### **5.6 Project Schedule *(Rubric: Schedule 5 pts)***
 
@@ -427,7 +488,7 @@ Tasks:
 
 * Decide whether to grant optional rights; include signed statements if opting in.  
 * **Team Input Needed:** Team consensus on IP permissions.  
-* MIT, open source
+* MIT, open source \-matt
 
 ### **7.4 Funding & Budget Statement**
 

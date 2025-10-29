@@ -29,11 +29,18 @@ Rupkuvarba Rathod \--- rura4902@colorado.edu \--- 2026 / Aerospace Engineering
 * Highlight unique value and alignment to NASA goals; leverage docs/PRD.md.  
 * **Team Input Needed:** Final mission statement/vision approval from project lead.
 
+Tuxedo is a paired UI system that connects a Pressurized Rover (PR) and an EVA spacesuit through the Athena AI assistant. Our goal is to help crews find a lost Lunar Terrain Vehicle (LTV), traverse safely in low‑light terrain, perform diagnosis and repair, and return to the PR with strong human‑in‑the‑loop control. 
+
+We focus on safety, efficiency, and low cognitive load. The design traces to FY26 SUITS requirements and the mission flow (PR search → Egress → EV Nav → LTV Repair → Ingress).
+
 ## **2\. Eligibility**
 
 * Declare compliance: all members ≥18, enrolled in eligible programs, STEM Gateway enrollment, advisor availability for orientation, SDR, onsite test.  
 * Note single-team participation constraint and advisor travel commitment.  
 * **Team Input Needed:** Enrollment verification status, advisor travel confirmation.
+
+
+All team members are ≥18 and enrolled at accredited U.S. institutions. We will enroll in STEM Gateway, attend Orientation (Dec 11, 2025) and the Virtual SDR (Apr 2, 2026), and bring a faculty advisor onsite. Each student will participate with one team only.
 
 ## **3\. Letter of Intent**
 
@@ -63,6 +70,11 @@ Athena answers natural‑language questions (“O₂ status?”) with short, num
 
 Tests will be conducted in night/low‑light conditions and with representative obstacles, following a HITL plan that measures task time, path accuracy, warnings, and crew workload. The spacesuit display will use a passthrough AR HMD or wrist tablet; the rover UI runs on a workstation tethered to DUST. All features directly trace to SUITS “shall” requirements for the PR and Spacesuit display.
 
+\------simplified alternate version---  
+Tuxedo pairs two simple, glanceable UIs—one for the PR and one for the EVA suit, backed by Athena, our offline‑first AI. The PR UI shows a live 2D map, an adaptive search pattern centered on the LTV’s last known point, route planning with hazard avoidance, consumable forecasts with “turnaround” guidance, mission timers, and drop‑pins. The EV UI shows suit/biomed telemetry, a 2D minimap with breadcrumbs, best‑path suggestions, drop‑pins, and short, numeric voice replies from Athena for procedures and LTV repair. Both UIs subscribe to NASA’s Telemetry Stream Server (TSS) via WebSockets (JSON/GeoJSON). 
+
+Athena keeps humans in control. It cross‑checks any mission‑critical value against TSS before display or speech and asks for confirmation on key decisions. Testing will occur in night/low‑light conditions with representative obstacles. We will measure task time, path accuracy, warning response, and crew workload (e.g., NASA‑TLX). Hardware will include a pass‑through AR HMD or wrist tablet for EV and a workstation for PR integrated with DUST. All features map to SUITS “shall” items for PR and Spacesuit displays.
+
 ### **5.2 Software & Hardware Design Description *(Rubric: Design Description 25 pts max)***
 
 * Provide architecture overview across apps/ev-ui, apps/pr-ui, services/aia, and libs/tss-client.  
@@ -77,7 +89,7 @@ Tests will be conducted in night/low‑light conditions and with representative 
 **Five layers, one mental model** :
 
 1. **TSS Interface** – One client library for PR and EV to subscribe to JSON/GeoJSON telemetry via WebSockets (assets, suit, LTV beacon/UIA/DCU states, timers). Configurable SUITSNET IP for test week.   
-2. **Athena AI Core** – A local, lightweight LLM for fast, offline responses; optional higher‑capacity node for planning. Retrieval‑augmented with procedures and constraints; every critical value is cross‑checked with TSS before display or speech.  
+2. **Athena AI Core:** Lightweight local LLM for fast, offline answers, plus an optional higher‑capacity node for planning. All numbers are verified against TSS.  
 3. **Navigation & Analytics** – A\*‑based path planning with slope and hazard penalties; power/consumables estimators compute safe “turnaround.”  
 4. **UI Layer** – Two simple, glanceable UIs: PR (map \+ panels) and EV (maplet \+ tiles). Large text, high contrast for night operations.   
 5. **Interoperability** – A shared, minimal JSON schema for POIs, drops, timers, and status so PR and EV see the same data, even if disconnected briefly.
@@ -93,7 +105,9 @@ Tests will be conducted in night/low‑light conditions and with representative 
 * **Hardware Platform:** Operates on DUST simulation PC; connected to local TSS instance via WebSocket.  
 * **Mission timers**: MET in **HH:MM:SS**; visible and synced.
 
-### **5.2.3  EVA Spacesuit Subsystem**
+The PR interface presents rover telemetry, a 2D terrain map, a caution/warning feed, and resource charts. The autonomous module plans safe routes, adapts the LTV search pattern, and visualizes the LTV consumable radius. LIDAR assists obstacle handling. Predictive analytics set a “turnaround” radius. Operators can drop pins by voice or touch and annotate hazards and EV markers. The app runs on the DUST workstation and connects to TSS via WebSocket. Mission Elapsed Time (MET) is shown in HH:MM:SS.
+
+### **5.2.3 EVA Spacesuit Subsystem**
 
 * **Wearable Interface:** Passthrough AR (HoloLens 2\) and wrist-mounted tablet display with real-time biomedical telemetry, navigation, and procedure checklists.  
 * **Suit & bio**: O₂, battery, fans/pumps status, comms channel, heart rate—simple color states with numbers on tap.  
@@ -105,6 +119,8 @@ Tests will be conducted in night/low‑light conditions and with representative 
 * **AIA Task Engine:** RAG-enabled LLM retrieves EVA procedures from local cache and adapts instruction flow based on completion state and biometrics.  
 * **Caution/Warning:** Audible and visual flags for off-nominal vitals or system anomalies; contextual escalation logic for urgent events.  
 * **Procedures**: Scrollable steps for UIA/DCU and repair tasks; each step highlights the control/switch; state is verified from TSS. (E.g., “OXY–PRI” checked via DCU telemetry.)
+
+The EV wearable (pass‑through AR HMD or wrist tablet) shows suit/biomed status, a minimap, and procedure lists. Status tiles use simple colors; details appear on tap. The map displays the planned search route, assets, and a breadcrumb toggle. EV can drop pins by voice or tap. Best‑path suggestions and predicted range reflect current life‑support use. Athena provides concise voice prompts and verifies UIA/DCU steps via TSS booleans. Off‑nominal states trigger visual and audible alerts with contextual escalation.
 
 \------------------------
 
@@ -163,50 +179,37 @@ Both teams will be using this.
 * **Update cadence**: Frequent small packets; stale‑data badges if lagging.  
 * **Offline grace**: EV keeps last route, breadcrumbs, and procedures cached; PR logs all outbound advisory messages for re‑sync.
 
+We share a small schema across PR↔EV for POIs, timers, warnings, and status. Updates are frequent and small. If the link lags, the UI shows a stale‑data badge. EV caches routes, breadcrumbs, and procedures; PR logs outbound advisories for re‑sync..
+
 ### **5.2.5 Hardware and Peripheral Devices**
 
-* **HoloLens 2 (Passthrough AR)** — Primary display for EVA; adjustable for low-light conditions per mission description  
-* **Wrist mount tablet**   
-* **Rover Workstation** — Ruggedized touchscreen interface with embedded compute.  
-* **Edge Compute Laptop**— Laptop with 16gb graphics processing to load GPT-OSS20b with gguf for on-device AI inference and local caching.  
-* **Communication Bus** — WebSocket to share POI between rover and eva  
+* **HoloLens 2 (Passthrough AR)** — Primary display for EVA  
+* **Wrist mount tablet –** additional touchscreen input \+ screen display.  
+* **Rover workstation** — Rugged touchscreen for PR UI.  
+* **Edge laptop** — Optional local inference (quantized LLM) and caching.  
+* **Comms** — WebSocket for shared pins/POIs between PR and EV.  
+    
+    
+    
   
 
 
 **5.3 Concept of Operations (CONOPS)**
 
-**Scenario:** The LTV stops communicating. PR must search within a radius based on last known position/consumables, close enough to “wake” it (≤500 m), then support EV egress, traverse, repair (ERM, diagnosis, nav restart, physical fix), and safe ingress. Testing occurs at night in the JSC Rock Yard. 
+**Phase A — PR Search & Approach**  
+ Load the LTV last‑known location and draw a consumable‑based search radius. Plan a safe A\* route and adapt the pattern as LIDAR/beacon cues arrive. Show a proximity meter near \~50 m and the return “turnaround” limits. Trigger warnings if plans exceed safe return. 
 
-**Phase A — PR search & approach**
+**Phase B — Egress (UIA/DCU)**  
+ On EV, open *Procedures → Egress*. Athena presents short prompts and highlights the next control. TSS verifies each switch state. Announce completion and shift focus to Navigation. 
 
-1. PR loads last LTV point and draws search radius based on LTV consumables. Athena selects a path using A\* and autonomously navigates obstacles as information becomes available through LIDAR sensors.   
-2. As beacons/LiDAR cues arrive, the pattern adapts; a proximity meter appears at \~50 m to help home in.   
-3. PR shows turnaround limits based on remaining power; Caution/Warning triggers if plans exceed safe return. 
+**Phase C — EV Navigation**  
+ Follow the minimap route to the LTV with breadcrumbs on. Keep contrast high for south‑pole lighting; warn on nearby hazards. Update the range ring with suit consumption; alert if return margin drops. 
 
-**Phase B — Egress (UIA/DCU)**
+**Phase D — LTV Repair**  
+ Run ERM, then diagnosis, navigation restart, and the physical repair sequence. Confirm each step via AIA; defer non‑critical repairs if behind schedule. Re‑run final checks to verify stability. 
 
-1. EV opens Procedures \> Egress; steps appear with switch highlights and TSS‑based confirmation (e.g., O2 vent OPEN/CLOSE, OXY PRI/SEC, pump power).  
-2. Athena reads short prompts and listens for “Confirm/Repeat/Next.”  
-3. On completion, EV gets “Egress complete—proceed to Navigation.” 
-
-**Phase C — EV navigation**
-
-1. EV follows the minimap route to the LTV with breadcrumbs on; map shows live assets.  
-2. In low light, the UI keeps contrast high; Athena warns about nearby hazards and suggests minor route changes.   
-3. Range ring updates with suit consumption; Athena alerts if return margin drops below threshold. 
-
-**Phase D — LTV repair**
-
-1. Exit Recovery Mode (ERM): EV says “Athena, start ERM.” The checklist appears; success is confirmed before moving on.  
-2. Diagnosis: Athena runs checks; EV can add a visual inspection note; results yield next actions.  
-3. Nav restart: Steps to physically restart the LTV nav are guided and verified.  
-4. Physical fix: Tasks may include reconnecting a bus connector (must repair) and dust sensor replacement (repair later if time is low—Athena will recommend deferring when behind schedule).  
-5. Final checks: Athena re‑runs diagnostics and confirms stability. 
-
-**Phase E — Ingress**
-
-1. Athena provides best return path and shows breadcrumbs back to PR.  
-2. EV runs Ingress procedures at UIA/DCU with the same verify‑as‑you‑go flow. Mission timers stop; logs sync to PR.
+**Phase E — Ingress**  
+ Provide the safest return path and visualize breadcrumbs. Run Ingress procedures at the UIA/DCU with the same verify‑as‑you‑go flow. Stop mission timers and sync logs.
 
 **EV:**  
 Tasks:
@@ -227,13 +230,11 @@ Tasks:
   * Ingress
 
 
-### **5.4 Feasibility & Production Plan *(Rubric: Feasibility 10 pts)***
+### **5.4 Feasibility & Production Plan** 
 
-* Explain implementation phases, design-to-build workflow, resource availability, fabrication/testing facilities, risk mitigations.  
-* Cite docs/PROJECT\_MANAGEMENT.md and docs/DEVICE\_SELECTION.md.  
-* **Team Input Needed:** Inventory of available hardware, lab access, fabrication partners.
+We will build in phases: TSS client and UI shells, then search/pathfinding and procedures, then LTV repair flow and guardrails, followed by night tests and SDR integration. Facilities include campus labs and outdoor test areas with controlled low‑light. Risks (e.g., network latency, device thermal limits, ASR robustness) have mitigations: local caching, thermal throttling, offline grammar for commands, and deterministic fallbacks.
 
-## **5.5 Artificial Intelligence Integration Athena AIA** 
+### 5.5 Artificial Intelligence Integration Athena AIA 
 
 Athena is a crew force multiplier that lowers cognitive load for both the EVA crewmember (EV) and Pressurized Rover (PR) operators. Voice replies are concise (“Primary O₂ 47%, Secondary 99%.”), and routing is safe/efficient within consumable limits. Guardrails prevent hallucination‑driven behavior in mission‑critical contexts. 
 
@@ -314,7 +315,7 @@ Tasks:
 * Use docs/HITL\_TEST\_PLAN.md as baseline.  
 * **Team Input Needed:** Subject pool access, IRB/ethics requirements, simulator booking.
 
-**Rover:**
+We will test bi‑weekly from Jan–Apr with night/low‑light outdoor trials and TSS‑simulated streams. Metrics include task completion time, path accuracy, hazard‑avoidance rate, warning response time, and NASA‑TLX workload. Safety measures include PPE, spotters, terrain briefs, device straps/covers, and controlled lighting. Findings directly gate feature graduation to Test Week readiness.
 
 **Purpose**: Show our UI and Athena reduce workload and errors for each mission phase in **night/low‑light** outdoor trials, with TSS simulated streams. 
 

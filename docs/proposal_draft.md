@@ -58,6 +58,8 @@ All team members are ≥18 and enrolled at accredited U.S. institutions. We will
 
 Tuxedo pairs two glanceable UIs, one for the Pressurized Rover (PR) and one for the EVA suit, backed by Athena, our offline‑first AI assistant. The PR UI shows a live 2D map, an adaptive search pattern centered on the LTV’s last known point, route planning with hazard avoidance, consumable forecasts with “turnaround” guidance, mission timers, and drop‑pins.
 
+Augmented Guided Reality (AGR). Our pass-through AR layer anchors step-aware visual cues (highlight, motion arrows, hand/gesture hints, animated tool cues, and contextual widgets) on UIA/DCU and LTV hardware, with step advancement only when TSS confirms the expected state. Paired with concise voice (“Primary O₂ 47%, Secondary 99%”), AGR reduces cognitive load during egress, navigation, repair, and ingress.
+
 The EV UI shows suit and biomedical telemetry, a minimap with breadcrumbs, best‑path suggestions, drop‑pins, and short numeric voice replies for procedures and LTV repair. Both UIs subscribe to the Telemetry Stream Server (TSS) via WebSockets (JSON/GeoJSON). We test at night/low light and measure task time, path accuracy, warning response, and crew workload. All features trace to SUITS “shall” requirements for PR and Spacesuit displays.
 
 Athena answers natural‑language questions (“O₂ status?”) with short, numeric replies and cross‑checks mission‑critical outputs against real-time TSS data before speaking or displaying them. When navigation goals or suit status change, Athena updates routes, search patterns, and procedures with clear confirmation prompts. The design prioritizes human‑in‑the‑loop control and sets guardrails to avoid hallucination risks. 
@@ -179,20 +181,20 @@ Both teams will be using this.
          1. Probably ideal to have text-speech capability as supplementary to visual cues  
          2. Need to decide how to determine ongoing “sample rate” with respect to making API requests to the AI service. Unless we’ll only use the service for more complicated requests from the user. Really we just need to settle the extent of AI involvement to know where we go with respect to this.
 
-### 5.2.4 Interoperability & data sharing
+### 5.2.5 Interoperability & data sharing
 
 * **Shared schema** for PR↔EV: POIs, status, timers, warnings.  
 * **Update cadence**: Frequent small packets; stale‑data badges if lagging.  
 * **Offline grace**: EV keeps last route, breadcrumbs, and procedures cached; PR logs all outbound advisory messages for re‑sync.
 
-We share a small schema across PR↔EV for POIs, timers, warnings, and status. Updates are frequent and small. If the link lags, the UI shows a stale‑data badge. EV caches routes, breadcrumbs, and procedures; PR logs outbound advisories for re‑sync.
+We share a small schema across PR↔EV for POIs, timers, warnings, and status. Updates are frequent and small. If the link lags, the UI shows a stale‑data badge. EV caches routes, breadcrumbs, and procedures; PR logs outbound advisories for re‑sync. HMD use is pass-through AR for mobility safety, and TSS remains the source of truth for all numbers and UIA/DCU switch states—computer vision never overrides telemetry.
 
-### **5.2.5 Hardware and Peripheral Devices**
+### **5.2.6 Hardware and Peripheral Devices**
 
 * **HoloLens 2 (Passthrough AR)** — Primary display for EVA  
 * **Wrist mount tablet –** additional touchscreen input \+ screen display.  
 * **Rover workstation** — Rugged touchscreen for PR UI.  
-* **Edge laptop** — Optional local inference (quantized LLM) and caching.  
+* **Edge laptop** —  At least 16gb gpu processing, gguf gpt oss 20b.  
 * **Comms** — WebSocket for shared pins/POIs between PR and EV.
 
 ### **5.3 Concept of Operations (CONOPS) — AGR‑aware flow** 

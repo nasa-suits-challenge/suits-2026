@@ -70,12 +70,7 @@ Athena answers natural‑language questions (“O₂ status?”) with short, num
 
 Tests will be conducted in night/low‑light conditions and with representative obstacles, following a HITL plan that measures task time, path accuracy, warnings, and crew workload. The spacesuit display will use a passthrough AR HMD or wrist tablet; the rover UI runs on a workstation tethered to DUST. All features directly trace to SUITS “shall” requirements for the PR and Spacesuit display.
 
-\------simplified alternate version---  
-Tuxedo pairs two simple, glanceable UIs—one for the PR and one for the EVA suit, backed by Athena, our offline‑first AI. The PR UI shows a live 2D map, an adaptive search pattern centered on the LTV’s last known point, route planning with hazard avoidance, consumable forecasts with “turnaround” guidance, mission timers, and drop‑pins. The EV UI shows suit/biomed telemetry, a 2D minimap with breadcrumbs, best‑path suggestions, drop‑pins, and short, numeric voice replies from Athena for procedures and LTV repair. Both UIs subscribe to NASA’s Telemetry Stream Server (TSS) via WebSockets (JSON/GeoJSON). 
-
-Athena keeps humans in control. It cross‑checks any mission‑critical value against TSS before display or speech and asks for confirmation on key decisions. Testing will occur in night/low‑light conditions with representative obstacles. We will measure task time, path accuracy, warning response, and crew workload (e.g., NASA‑TLX). Hardware will include a pass‑through AR HMD or wrist tablet for EV and a workstation for PR integrated with DUST. All features map to SUITS “shall” items for PR and Spacesuit displays.
-
-### **5.2 Software & Hardware Design Description *(Rubric: Design Description 25 pts max)***
+**5.2 Software & Hardware Design Description *(Rubric: Design Description 25 pts max)***
 
 * Provide architecture overview across apps/ev-ui, apps/pr-ui, services/aia, and libs/tss-client.  
 * Include system diagrams, UI wireframes, audio/voice flows, telemetry integration (docs/TSS\_INTEGRATION.md), and hardware interface plans.  
@@ -234,55 +229,62 @@ Tasks:
 
 We will build in phases: TSS client and UI shells, then search/pathfinding and procedures, then LTV repair flow and guardrails, followed by night tests and SDR integration. Facilities include campus labs and outdoor test areas with controlled low‑light. Risks (e.g., network latency, device thermal limits, ASR robustness) have mitigations: local caching, thermal throttling, offline grammar for commands, and deterministic fallbacks.
 
-### 5.5 Artificial Intelligence Integration Athena AIA 
+### **5.5 Artificial Intelligence Integration — Athena (AIA)**
 
-Athena is a crew force multiplier that lowers cognitive load for both the EVA crewmember (EV) and Pressurized Rover (PR) operators. Voice replies are concise (“Primary O₂ 47%, Secondary 99%.”), and routing is safe/efficient within consumable limits. Guardrails prevent hallucination‑driven behavior in mission‑critical contexts. 
+**Role & outcomes.**  
+ Athena reduces cognitive load for the EV and PR operators with short, numeric replies and conservative navigation/routing. Example replies follow SUITS guidance: “Primary O₂ 47%, Secondary 99%.” 
 
-### **5.5.1 Where AI runs & data sources**
+**Where AIA runs & data.**
 
-* **On‑Suit Node (EV AIA)** — runs on the EV wearable (pass‑through AR HMD or wrist tablet). Handles offline speech I/O, short telemetry call‑and‑response, procedure step‑through, local hazard cues, breadcrumb backtrack, and POI pins. All numbers are read‑only from TSS. *(HMD, if used in field testing, is pass‑through AR; TSS provides suit/DCU/UIA states.)*   
-* **Rover Node (PR AIA)** — runs on the PR workstation. Provides search‑pattern planning for the LTV, autonomous path planning/hazard avoidance in DUST, consumable forecasting, and go/no‑go/turnaround support.   
-* **Interoperability**  — JSON publish/subscribe channel to sync telemetry, procedures, POIs, alerts, and status between EV and PR UIs.  
-* **Connectivity** — Both nodes consume the Telemetry Stream Server (TSS) via WebSocket with JSON/GeoJSON packets; during Test Week, devices point to the SUITSNET host IP. (No internet dependency.) 
+* **EV node (on‑suit):** Runs lightweight, offline speech I/O, intent/grammar, procedure step‑through, local hazard cues, breadcrumb backtrack, and POI pins. No heavy LLM on the HMD/tablet. All numbers come verbatim from TSS.   
+* **PR node (edge/rover):** Runs planning and multi‑constraint reasoning (terrain × energy × time) on the rover workstation or edge laptop. This matches our hardware plan for an on‑site edge compute laptop.   
+* **Connectivity:** Both nodes consume TSS via WebSocket in JSON/GeoJSON; during Test Week, devices point to SUITSNET host IP (no internet). 
 
-### **5.5.2 AI capabilities by mission phase (bounded behaviors)**
+**Interoperability.**  
+ EV and PR UIs share procedures, telemetry, POIs, alerts, and status over a minimal JSON pub/sub channel to stay in sync and tolerate brief disconnects. 
 
-* **PR Navigation & LTV Search (PR AIA)**  
-   Builds an industry‑standard search pattern from LTV last‑known position; fuses DUST terrain, LTV beacon strength, and rover resources to adapt the path. Supports LTV “wake‑up call” behavior (search shrinks \< 500 m; “warmer/colder” cues to \~50 m). Outputs route, ETA, energy/time budget, and dynamic turnaround advice.   
-* **Egress (EV AIA)**  
-   Presents UIA/DCU checklists via short voice prompts; verifies switch states via TSS booleans; highlights next control. Output example: “Step 3 complete—OXY PRI selected.”   
-* **EV Navigation (EV AIA; collaborates with PR)**  
-   Provides 2D mini‑map cues, breadcrumb return, drop‑pin, and hazard alerts under south‑pole lighting; updates route as terrain/telemetry change; predicts max range from current life‑support usage.   
-* **LTV Repair (EV AIA)**  
-   Guides **ERM → diagnosis → restart → physical repair → verification** with on‑demand steps; can lock non‑essential tasks when time is low.   
-* **Ingress (EV AIA)**  
-   Computes safest return path using remaining O₂/energy plus breadcrumb trail; confirms final UIA/DCU post‑EVA settings. 
+### **5.5.1 Capabilities by mission phase (bounded)**
 
-### **5.5.3 Models & rationale (offline‑first)**
+* **PR navigation & LTV search (PR AIA).**  
+   Builds a standard search pattern from the LTV last‑known position; fuses DUST terrain, beacon strength, and rover resources; outputs route, ETA, energy/time budget, and dynamic turnaround advice. Supports “wake‑up” behavior (\<500 m) and “warmer/colder” cues to \~50 m.   
+* **Egress (EV AIA).**  
+   Presents UIA/DCU checklists by short voice prompts; highlights the next control; verifies switch states via TSS booleans.   
+* **EV navigation (EV AIA; collaborates with PR).**  
+   Provides a 2D mini‑map, breadcrumb return, drop‑pins, hazard alerts for south‑pole lighting, and predicts max range based on life‑support usage.   
+* **LTV repair (EV AIA).**  
+   Guides ERM → diagnosis → restart → physical repair → verification with on‑demand steps; can lock non‑critical tasks when time is low.   
+* **Ingress (EV AIA).**  
+   Computes the safest return path using remaining O₂/energy plus breadcrumbs; confirms final UIA/DCU post‑EVA settings. 
 
-* **Speech‑to‑Text** (EV & PR): small on‑device ASR for robust offline commands and telemetry queries (mission grammar: UIA/DCU labels, “ERM,” “ingress,” etc.).   
-* **Dialogue/Reasoning LLM**:  
-  * **EV node:** quantized **7–13B** local model for \< 2 s short replies.  
-  * **PR node:** larger **13–30B** local model for multi‑constraint planning (terrain × energy × time).  
-* **Computer Vision (EV)**: tiny detectors for UIA/DCU highlighting and basic hazard cues; never asserts switch state—TSS is truth.   
-* **Time‑Series Forecasting** (PR & EV): lightweight models forecast consumables/range; cross‑checked by deterministic budget equations (redundancy).
+### **5.5.2 Models & rationale (offline‑first)**
 
-### **5.5.4 Knowledge, tools, and RAG (tools‑first)**
+* **Speech‑to‑Text (EV & PR).**  
+   Small on‑device ASR for robust offline commands (mission grammar: UIA/DCU labels, “ERM,” “ingress,” etc.).   
+* **Dialogue/Reasoning.**  
+  * **EV node:** 1–3B quantized local model *or* rule/grammar \+ templates for \<2 s replies on HMD/tablet; no 7B on device.  
+  * **PR/edge node:** 13–20B quantized local model for planning and multi‑constraint trade‑offs, running on the rover workstation/edge laptop already in our hardware list.   
+* **Computer vision (EV).**  
+   Tiny detectors for UIA/DCU highlighting and basic hazard cues; switch truth always comes from TSS.   
+* **Time‑series forecasting (PR & EV).**  
+   Lightweight models predict consumables/range; cross‑checked by deterministic budget math.   
+* **AR task guidance (EV).**  
+   We adapt *Guided Reality* to transform procedure text into step‑wise AR overlays and embed them in physical space. We identify the visual guidance type for each step and place overlays at key interaction points, while verifying state via TSS. This provides learnable but bounded guidance for egress and LTV repair. [arXiv](https://arxiv.org/abs/2508.03547?utm_source=chatgpt.com)
 
-* **Local KB**: EVA procedures (UIA/DCU, ERM, restart/repair), mission rules, telemetry schema, base map layers.  
-* **Structured tools** (examples):  
-   get\_telemetry(keypath), plan\_route(origin,dest,constraints), predict\_resources(window), checklist(step\_id), beacon\_bearing().  
-* **Constrained outputs**: AIA returns strict JSON envelopes ({utterance, evidence, tool\_calls, confidence}) for deterministic UI behavior and audit logs.  
+### **5.5.3 Knowledge, tools, and RAG (tools‑first)**
 
-### **5.5.5 Guardrails & hallucination mitigation (safety by design)**
+* **Local KB.** EVA procedures (UIA/DCU, ERM, restart/repair), mission rules, telemetry schema, and base map layers.  
+* **Tools (examples).** get\_telemetry(keypath), plan\_route(origin,dest,constraints), predict\_resources(window), checklist(step\_id), beacon\_bearing().  
+* **Deterministic I/O.** AIA returns strict JSON envelopes ({utterance, evidence, tool\_calls, confidence}) for predictable UI behavior and audit logs. 
 
-* **Source‑of‑truth**: Any number (O₂, battery, pressure, timers) is verbatim from **TSS**; AIA cannot invent/overwrite values.   
-* **Tools‑before‑talk**: Data‑seeking questions must call a tool first; otherwise return a safe “Unavailable.”   
-* **Confidence gating**: If confidence \< 0.8, AIA either narrows the question or presents options with rationale and asks for confirmation.   
-* **Two‑step confirmations** for mission‑critical guidance (routing, ERM, restarts, return‑to‑PR); always **human‑in‑the‑loop**.   
-* **Deterministic fallbacks**: If LLM fails, Athena emits template responses driven directly by tools (e.g., “Primary O₂ XX%, Secondary YY%. Next ERM step: …”).   
-* **Cross‑checks & margins**: Route and range predictions are cross‑validated by conservative budget math; conservative result wins and triggers a caution.    
-* **Mode awareness**: During egress/ingress, AIA is checklist‑only; during traverse, it limits speech and only interrupts for caution/warning states. 
+### **5.5.4 Guardrails & hallucination mitigation (safety by design)**
+
+* **Source of truth.** Any number (O₂, battery, pressure, timers) is verbatim from TSS.  
+* **Tools‑before‑talk.** Data‑seeking queries must call a tool first; otherwise return “Unavailable.”  
+* **Confidence gating.** Below 0.8 confidence, AIA narrows the question or presents options for confirmation.  
+* **Two‑step confirms.** Required for routing, ERM, restarts, and return‑to‑PR; human‑in‑the‑loop always.  
+* **Deterministic fallbacks.** If the LLM fails, Athena emits template responses driven directly by tools.  
+* **Cross‑checks & margins.** Predictions are validated by conservative budget math; conservative result wins and raises a caution.  
+* **Mode awareness.** During egress/ingress, checklist‑only; during traverse, speak only for cautions/warnings.
 
 ### **5.6 Project Schedule *(Rubric: Schedule 5 pts)***
 
@@ -448,19 +450,29 @@ Tasks:
 
 ### **7.4 Funding & Budget Statement**
 
-* Present budget table (travel, lodging, hardware, testing, misc) using docs/BUDGET\_TEMPLATE.md.  
 * List funding sources (Space Grant, institutional funds, sponsors).  
 * **Team Input Needed:** Updated cost estimates, confirmed funding commitments.
+
+
+**Budget Template** 
+
+| Item | Cost |
+| ----- | ----- |
+| Flights (8 people) | $4,500 |
+| Hotel | $2,000 |
+| Ground transportation | $400 |
+| Operating (consumables, spares) | $600 |
+| Software/licenses | $500 |
+| Miscellaneous | $500 |
+| **TOTAL** | **$8,500** |
+
+* **Funding Sources**: institutional grants, Space Grant, sponsors, departmental support.  
+* 
 
 ### **7.5 Hololens2 Loan Program**
 
 * Declare Option A/B/C with justification and device count.  
 * **Team Input Needed:** Device inventory status, institutional loan agreements.
-
-### **7.6 Proposal Scoring Method**
-
-* Explain internal review process referencing docs/RUBRIC\_SELF\_ASSESSMENT.md.  
-* Document planned pre-submission scoring checkpoints.
 
 ### **7.7 Other Deliverables**
 
@@ -475,12 +487,6 @@ Tasks:
 Tasks:
 
 * Upload/acquire official logo(s) \- **Tess**
-
-## **8\. Proposal Scoring Rubric**
-
-* Include official rubric (Section 8 of guidelines) within the proposal appendix.  
-* Summarize internal self-assessment results referencing docs/RUBRIC\_SELF\_ASSESSMENT.md.  
-* **Team Input Needed:** Completed self-assessment scores once draft matures.
 
 ## **Appendices (Do Not Count Toward Technical 12-Page Limit)**
 

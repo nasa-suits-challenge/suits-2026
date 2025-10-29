@@ -280,7 +280,7 @@ We will build in phases: TSS client and UI shells, then search/pathfinding and p
 
 * **Source of truth.** Any number (O₂, battery, pressure, timers) is verbatim from TSS.  
 * **Tools‑before‑talk.** Data‑seeking queries must call a tool first; otherwise return “Unavailable.”  
-* **Confidence gating.** Below 0.8 confidence, AIA narrows the question or presents options for confirmation.  
+* **Confidence gating.** Below 0.8 confidence, AIA responds “confidence level: %, answer)  
 * **Two‑step confirms.** Required for routing, ERM, restarts, and return‑to‑PR; human‑in‑the‑loop always.  
 * **Deterministic fallbacks.** If the LLM fails, Athena emits template responses driven directly by tools.  
 * **Cross‑checks & margins.** Predictions are validated by conservative budget math; conservative result wins and raises a caution.  
@@ -371,7 +371,9 @@ Tasks:
 
 * Citation method (IEEE or APA)  
 * Find **minimum** 2 technical references  
-  * [EVA-EXP-0034 Exploration EVA System Technical Standards Rev B\_CCB.pdf](https://ntrs.nasa.gov/api/citations/20205004275/downloads/EVA-EXP-0034%20Exploration%20EVA%20System%20Technical%20Standards%20Rev%20B_CCB.pdf)
+  * [EVA-EXP-0034 Exploration EVA System Technical Standards Rev B\_CCB.pdf](https://ntrs.nasa.gov/api/citations/20205004275/downloads/EVA-EXP-0034%20Exploration%20EVA%20System%20Technical%20Standards%20Rev%20B_CCB.pdf)  
+  * **Guided Reality: Generating Visually-Enriched AR Task Guidance with LLMs and Vision Models \-** [https://arxiv.org/abs/2508.03547](https://arxiv.org/abs/2508.03547)  
+    
 
 ## **6\. Community & Industry Engagement *(Rubric: Engagement 20 pts)***
 

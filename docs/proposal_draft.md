@@ -15,7 +15,7 @@ Tess Johnson \--- tess.johnson-1@colorado.edu \--- 2027 / Aerospace Engineering 
  Lynzee Hoegger \--- lynzee.hoegger@colorado.edu \--- 2025 / Aerospace Engineering  
 Rupkuvarba Rathod \--- rura4902@colorado.edu \--- 2026 / Aerospace Engineering  
  Sciences Bioastronautics  
- Member Name \--- Role Email Address \--- Academic Year / Academic Major Faculty
+ Shubhakriti Gupta \--- shgu7324@colorado.edu \--- 2027 / Aerospace Engineering Sciences
 
  Advisor Name Email Address Phone Number
 
@@ -26,15 +26,15 @@ Rupkuvarba Rathod \--- rura4902@colorado.edu \--- 2026 / Aerospace Engineering
 
 ## **1\. Introduction**
 
-Tuxedo is a paired UI system that connects a Pressurized Rover (PR) and an EVA spacesuit through the Athena AI assistant. Our goal is to help crews find a lost Lunar Terrain Vehicle (LTV), traverse safely in low‑light terrain, perform diagnosis and repair, and return to the PR with strong human‑in‑the‑loop control. 
+Tuxedo is a paired UI system that connects a Pressurized Rover (PR) and an Extravehicular Activity (EVA) spacesuit through the Athena AI assistant. Our goal is to help crews find a lost Lunar Terrain Vehicle (LTV), traverse safely in low‑light terrain, perform diagnosis and repair, and return to the Pressurized Rover (PR) with strong human‑in‑the‑loop control. 
 
 We focus on safety, efficiency, and low cognitive load. The design traces to FY26 SUITS requirements and the mission flow (PR search → Egress → EV Nav → LTV Repair → Ingress).
 
-What sets Tuxedo apart is our implementation of Augmented Guided Reality (AGR): an AI‑assisted overlay that understands suit/rover interfaces and LTV components, then delivers spatial, step‑by‑step visual cues in the HMD plus concise voice prompts—so an astronaut can execute egress, repair, and ingress without reading a manual or waiting for ground instruction. AGR follows SUITS “pass‑through AR” guidance for safety and uses TSS as the source of truth. 
+What sets Tuxedo apart is our implementation of Augmented Guided Reality (AGR): an AI‑assisted overlay that understands suit/rover interfaces and LTV components, then delivers spatial, step‑by‑step visual cues in the Head-Mounted Display (HMD) plus concise voice prompts—so an astronaut can execute egress, repair, and ingress without reading a manual or waiting for ground instruction. AGR follows SUITS “pass‑through AR” guidance for safety and uses the Telemetry Stream Server (TSS) as the source of truth. 
 
 ## **2\. Eligibility**
 
-All team members are ≥18 and enrolled at accredited U.S. institutions. We will enroll in STEM Gateway, attend Orientation (Dec 11, 2025) and the Virtual SDR (Apr 2, 2026), and bring a faculty advisor onsite. Each student will participate with one team only.
+All team members are ≥18 years old and enrolled at accredited U.S. institutions. We will enroll in STEM Gateway, attend Orientation (Dec 11, 2025\) and the Virtual SDR (Apr 2, 2026), and bring a faculty advisor onsite. Each student will participate with one team only.
 
 ## **3\. Letter of Intent**
 
@@ -50,21 +50,17 @@ All team members are ≥18 and enrolled at accredited U.S. institutions. We will
 
 ## **5\. Technical Section (≤12 pages including figures)**
 
-### **5.1 Abstract (≤500 words)**
+### **5.1 Abstract** 
 
-* Summarize prototype objectives, EVA scenario coverage, planned HITL testing, and hardware/peripherals required.  
-* **Team Input Needed:** Final hardware list, differentiators, testing highlights.
+Tuxedo pairs two glanceable UIs, one for the Pressurized Rover and one for the EVA suit, backed by Athena, our offline‑first AI assistant. The PR UI shows a live 2D map, an adaptive search pattern centered on the LTV’s last known point, route planning with hazard avoidance, consumable forecasts with “turnaround” guidance, mission timers, and drop‑pins.
 
+Augmented Guided Reality (AGR). Our pass-through AR layer anchors step-aware visual cues (highlight, motion arrows, hand/gesture hints, animated tool cues, and contextual widgets) on Umbilical Interface Assembly (UIA)/ Display Control Unit (DCU) and LTV hardware, with step advancement only when TSS confirms the expected state. Paired with concise voice (“Primary O₂ 47%, Secondary 99%”), AGR reduces cognitive load during egress, navigation, repair, and ingress.
 
-Tuxedo pairs two glanceable UIs, one for the Pressurized Rover (PR) and one for the EVA suit, backed by Athena, our offline‑first AI assistant. The PR UI shows a live 2D map, an adaptive search pattern centered on the LTV’s last known point, route planning with hazard avoidance, consumable forecasts with “turnaround” guidance, mission timers, and drop‑pins.
-
-Augmented Guided Reality (AGR). Our pass-through AR layer anchors step-aware visual cues (highlight, motion arrows, hand/gesture hints, animated tool cues, and contextual widgets) on UIA/DCU and LTV hardware, with step advancement only when TSS confirms the expected state. Paired with concise voice (“Primary O₂ 47%, Secondary 99%”), AGR reduces cognitive load during egress, navigation, repair, and ingress.
-
-The EV UI shows suit and biomedical telemetry, a minimap with breadcrumbs, best‑path suggestions, drop‑pins, and short numeric voice replies for procedures and LTV repair. Both UIs subscribe to the Telemetry Stream Server (TSS) via WebSockets (JSON/GeoJSON). We test at night/low light and measure task time, path accuracy, warning response, and crew workload. All features trace to SUITS “shall” requirements for PR and Spacesuit displays.
+The EVA Crewmember (EV) UI shows suit and biomedical telemetry, a minimap with breadcrumbs, best‑path suggestions, drop‑pins, and short numeric voice replies for procedures and LTV repair. Both UIs subscribe to the Telemetry Stream Server (TSS) via WebSockets (JSON/GeoJSON). We test at night/low light and measure task time, path accuracy, warning response, and crew workload. All features trace to SUITS “shall” requirements for PR and Spacesuit displays.
 
 Athena answers natural‑language questions (“O₂ status?”) with short, numeric replies and cross‑checks mission‑critical outputs against real-time TSS data before speaking or displaying them. When navigation goals or suit status change, Athena updates routes, search patterns, and procedures with clear confirmation prompts. The design prioritizes human‑in‑the‑loop control and sets guardrails to avoid hallucination risks. 
 
-Tests will be conducted in night/low‑light conditions and with representative obstacles, following a HITL plan that measures task time, path accuracy, warnings, and crew workload. The spacesuit display will use a passthrough AR HMD or wrist tablet; the rover UI runs on a workstation tethered to DUST. All features directly trace to SUITS “shall” requirements for the PR and Spacesuit display.
+Tests will be conducted in night/low‑light conditions and with representative obstacles, following a Human-in-the-Loop (HITL) plan that measures task time, path accuracy, warnings, and crew workload. The spacesuit display will use a passthrough AR HMD or wrist tablet; the rover UI runs on a workstation tethered to NASA’s Digital Lunar Exploration Sites Unreal Simulation Tool (DUST). All features directly trace to SUITS “shall” requirements for the PR and Spacesuit display.
 
 ### **5.2 Software & Hardware Design Description**
 
@@ -73,16 +69,16 @@ Tests will be conducted in night/low‑light conditions and with representative 
 **Five layers, one mental model** :
 
 1. **TSS Interface** – One client library for PR and EV to subscribe to JSON/GeoJSON telemetry via WebSockets (assets, suit, LTV beacon/UIA/DCU states, timers). Configurable SUITSNET IP for test week.   
-2. **Athena AI Core:** Lightweight local LLM for fast, offline answers, plus an higher‑capacity node on the rover for planning. All numbers are verified against TSS.  
+2. **Athena AI Core:** Lightweight local Large Language Model (LLM) for fast, offline answers, plus a higher‑capacity node on the rover for planning. All numbers are verified against TSS.  
 3. **Navigation & Analytics** – A\*‑based path planning with slope and hazard penalties; power/consumables estimators compute safe “turnaround.”  
 4. **UI Layer** – Two simple, glanceable UIs: PR (map \+ panels) and EV (maplet \+ tiles). Large text, high contrast for night operations.   
-5. **Interoperability** – A shared, minimal JSON schema for POIs, drops, timers, and status so PR and EV see the same data, even if disconnected briefly.
+5. **Interoperability** – A shared, minimal JSON schema for Points of Interest (POIs), drops, timers, and status so PR and EV see the same data, even if disconnected briefly.
 
 ### **5.2.2 Pressurized Rover Subsystem**
 
 * **Display/Control System:** Multi-panel UI with rover telemetry, 2D terrain map, caution/warning feed, and consumables chart.  
 * **Autonomous Navigation:** A\*-based route planner optimized for hazard avoidance. Integrates adaptive search pattern (sector pie) after LTV last-known point and estimated LTV consumable range from last-known point.  
-* **LIDAR –** Autonomous navigation includes LIDAR detection up to 10m.   
+* **LiDAR –** Autonomous navigation includes LiDAR detection up to 10m.   
 * **Resource Tracking:** Predictive estimates of rover power, life support, and fuel margins to define “turnaround radius.”  
 * **Caution/Warning System:** Color-coded alerts and Athena generated procedural recommendations.  
 * **Shared POIs:**  Voice activated drop-pin and annotation feature for LTV signal, terrain hazards, and EV location markers.  
@@ -91,7 +87,7 @@ Tests will be conducted in night/low‑light conditions and with representative 
 
 The PR interface presents rover telemetry, a 2D terrain map, a caution/warning feed, and resource charts. Mission Elapsed Time (MET) is shown in HH:MM:SS.
 
-Autonomy plans safe routes, adapts the LTV search pattern, and visualizes the consumable‑based turnaround radius. LIDAR assists obstacle handling. Operators can drop pins by voice or touch and annotate hazards and EV markers.
+Autonomy plans safe routes, adapts the LTV search pattern, and visualizes the consumable‑based turnaround radius. LiDAR assists obstacle handling. Operators can drop pins by voice or touch and annotate hazards and EV markers.
 
 ### **5.2.3 EVA Spacesuit Subsystem**
 
@@ -102,7 +98,7 @@ Autonomy plans safe routes, adapts the LTV search pattern, and visualizes the co
 * **Best‑path & range**: On select, show a clean suggested line; show predicted max range based on current life‑support use.  
 * **Breadcrumb & Return Path:** Autonomous backtrack algorithm stores GPS/GeoJSON trail to PR and visualizes optimal return under resource constraints.  
 * **Voice Assistant:** “Athena” provides concise telemetry reports (“O₂ Primary 48%, Secondary 99%”) and guides through ERM, diagnostics, and repair tasks.  
-* **AIA Task Engine:** RAG-enabled LLM retrieves EVA procedures from local cache and adapts instruction flow based on completion state and biometrics.  
+* **AIA Task Engine:** Retrieval-Augmented-Generation-enabled (RAG-enabled) LLM retrieves EVA procedures from local cache and adapts instruction flow based on completion state and biometrics.  
 * **Caution/Warning:** Audible and visual flags for off-nominal vitals or system anomalies; contextual escalation logic for urgent events.  
 * **Procedures**: Scrollable steps for UIA/DCU and repair tasks; each step highlights the control/switch; state is verified from TSS. (E.g., “OXY–PRI” checked via DCU telemetry.)
 
@@ -114,12 +110,12 @@ The map displays the planned route, assets, and a breadcrumb toggle. EV can drop
 
 **Purpose.** AGR reduces cognitive load and errors by projecting task‑aware visual guidance onto real hardware (UIA/DCU/LTV) while keeping the astronaut’s attention in‑scene. Visuals are paired with short, numeric voice confirmations (e.g., “O₂ Primary 47%, Secondary 99%.”). 
 
-**Visual guidance types.** We adopt a five‑type overlay palette—**(**1\) highlight key component, (2) motion arrows, (3) hand/gesture hints, (4) animated tool cues, (5) contextual widgets (e.g., timers)—in line with recent AR task‑guidance research (“Guided Reality”) demonstrating benefits of visually enriched, step‑aware guidance. We map each procedure step to one of these visual types. [ar5iv](https://ar5iv.org/pdf/2508.03547)
+**Visual guidance types.** We adopt a five‑type overlay palette—(1) highlight key component, (2) motion arrows, (3) hand/gesture hints, (4) animated tool cues, (5) contextual widgets (e.g., timers)—in line with recent AR task‑guidance research (“Guided Reality”) demonstrating benefits of visually enriched, step‑aware guidance. We map each procedure step to one of these visual types. [ar5iv](https://ar5iv.org/pdf/2508.03547)
 
 **How AGR anchors to reality.**
 
 * **Registration:** On first use, the HMD performs a quick spatial scan (pass‑through AR) to place anchors at known controls (UIA toggles, DCU knobs) and LTV access panels.  
-* **Detection & pose:** Tiny on‑device detectors propose 2D regions; depth/scene mesh from the HMD/tablet refines 3D pose. TSS booleans remain the truth for switch state; CV never overrides telemetry.  
+* **Detection & pose:** Tiny on‑device detectors propose 2D regions; depth/scene mesh from the HMD/tablet refines 3D pose. TSS booleans remain the truth for switch state; Computer Vision (CV) never overrides telemetry.  
 * **Step binding:** Each procedure step references **component IDs** (e.g., uia.oxy\_pri) tied to anchors. AGR renders the correct visual type and advances only when TSS confirms the state.  
 * **Interoperability:** AGR step state, POIs, and alerts sync over our PR↔EV JSON channel so both UIs remain consistent if connectivity hiccups occur. 
 
@@ -194,25 +190,26 @@ We share a small schema across PR↔EV for POIs, timers, warnings, and status. U
 * **HoloLens 2 (Passthrough AR)** — Primary display for EVA  
 * **Wrist mount tablet –** additional touchscreen input \+ screen display.  
 * **Rover workstation** — Rugged touchscreen for PR UI.  
-* **Edge laptop** —  At least 16gb gpu processing, gguf gpt oss 20b.  
+* **Edge laptop** —  Discrete GPU with ≥16 GB VRAM; runs an offline, quantized (GGUF) open‑source LLM (7–13B; 20B optional) for planning/RAG.  
+* **Nvidia DGX Spark** \-  HAL – 2001 space a odyssey   
 * **Comms** — WebSocket for shared pins/POIs between PR and EV.
 
 ### **5.3 Concept of Operations (CONOPS) — AGR‑aware flow** 
 
 **Phase A — PR Search & Approach.**  
- PR plans an industry‑standard search from the LTV’s last‑known point in DUST, adapting to terrain, beacon strength, and resources. As the PR nears the LTV, search shrinks (\< 500 m) and shows “warmer/colder” cues to \~50 m. MET and turn‑around are visible; cautions trigger AIA advisories. 
+PR plans an industry‑standard search from the LTV’s last‑known point in DUST, adapting to terrain, beacon strength, and resources. As the PR nears the LTV, search shrinks (\< 500 m) and shows “warmer/colder” cues to \~50 m. MET and turn‑around are visible; cautions trigger AIA advisories. 
 
 **Phase B — Egress (UIA/DCU).**  
- EV opens **AGR Egress**. The HMD highlights the **next physical control** (green halo; motion arrow if needed) and speaks a short prompt. When EV flips a switch, AGR **waits for TSS** to confirm before advancing (tone \+ “Step 3 complete—OXY PRI selected.”). The UI is glanceable and pass‑through per SUITS safety. 
+EV opens AGR Egress. The HMD highlights the next physical control (green halo; motion arrow if needed) and speaks a short prompt. When EV flips a switch, AGR waits for TSS to confirm before advancing (tone \+ “Step 3 complete—OXY PRI selected.”). The UI is glanceable and pass‑through per SUITS safety. 
 
 **Phase C — EV Navigation.**  
- AGR provides **low‑light‑safe** map cues, breadcrumb return, hazard pips, and a **range ring** based on suit consumables. Route updates as telemetry changes; AIA interrupts only for cautions/warnings to minimize chatter. 
+AGR provides low‑light‑safe map cues, breadcrumb return, hazard pips, and a range ring based on suit consumables. Route updates as telemetry changes; AIA interrupts only for cautions/warnings to minimize chatter. 
 
 **Phase D — LTV Repair.**  
- AGR guides **Exit Recovery Mode → Diagnosis → Nav Restart → Physical Repair → Verification**. Each step projects the appropriate **visual type** (e.g., animated hand to unlatch a cover; tool cue on a connector). If time is low, AIA proposes deferring non‑critical tasks; EV confirms before AGR hides those overlays. 
+AGR guides Exit Recovery Mode → Diagnosis → Nav Restart → Physical Repair → Verification. Each step projects the appropriate visual type (e.g., animated hand to unlatch a cover; tool cue on a connector). If time is low, AIA proposes deferring non‑critical tasks; EV confirms before AGR hides those overlays. 
 
 **Phase E — Ingress.**  
- AGR computes a **resource‑aware return** with breadcrumbs and runs **Ingress** checklists with the same verify‑as‑you‑go loop. Mission timers stop and logs sync to PR.
+AGR computes a resource‑aware return with breadcrumbs and runs Ingress checklists with the same verify‑as‑you‑go loop. Mission timers stop and logs sync to PR.
 
 **EV:**  
 Tasks:
@@ -235,7 +232,7 @@ Tasks:
 
 ### **5.4 Feasibility & Production Plan** 
 
-* **Compute placement.** Keep LLM off the HMD. Run ASR/CV and AGR rendering on‑suit; run planning/RAG on a PR workstation or approved belt‑worn edge (to be presented at SDR). This aligns with SUITS peripheral approval process.   
+* **Compute placement.** Keep LLM off the HMD. Run ASR/CV and AGR rendering on‑suit; run planning/RAG on a PR workstation or approved belt‑worn edge (to be presented at SDR).   
 * **Pass‑through AR.** HMD is passthrough for safe walking.   
 * **Networking.** Target SUITSNET; no internet dependency.
 
@@ -259,7 +256,7 @@ We will build in phases: TSS client and UI shells, then search/pathfinding and p
 * **On‑suit:** **Small ASR/TTS** and lightweight CV detectors (anchoring \+ safety cues). No large LLM on the HMD/tablet.  
 * **Edge/PR:** A **quantized 7–13B** LLM (or planner) for multi‑constraint reasoning (terrain × energy × time) and RAG over procedures; **20–30B** optional if an approved belt/rover compute pack is used.   
 * **Forecasting:** Light time‑series models predict consumables/range; deterministic budgets cross‑check and win if conservative.  
-* **Knowledge:** Local KB includes UIA/DCU & LTV procedures, telemetry schema, and base maps. AGR steps bind directly to these artifacts.
+* **Knowledge:** Local Knowledge Base (KB) includes UIA/DCU & LTV procedures, telemetry schema, and base maps. AGR steps bind directly to these artifacts.
 
 **Tools‑first API.**  
  AIA calls structured tools—get\_telemetry(), plan\_route(), predict\_resources(), checklist(step\_id), beacon\_bearing()—and emits strict JSON envelopes {utterance, evidence, tool\_calls, confidence} for deterministic UI behavior and audit logs.
@@ -268,28 +265,23 @@ We will build in phases: TSS client and UI shells, then search/pathfinding and p
 
 * **Source of truth:** Any numeric (O₂, battery, pressure, timers) is verbatim from TSS; AGR advances only on TSS‑confirmed state.  
 * **Tools‑before‑talk:** If a tool fails, AIA replies “Unavailable” safely.  
-* **Confidence gating:** If \<0.8, Athena narrows or asks for confirmation.  
+* **Confidence gating:** If \<0.8, Athena responds "Confidence %, response”  
 * **Two‑step confirmations:** Required for routing, ERM/restarts, return‑to‑PR.  
 * **Deterministic fallbacks:** Template responses and overlays driven directly by tools (e.g., “Primary O₂ XX%, Secondary YY%. Next ERM step…”).  
 * **Mode awareness:** Checklist‑only during egress/ingress; low‑chatter traverse with interrupts for cautions/warnings.
 
 ### **5.6 Project Schedule** 
 
-* Present milestone chart covering Oct proposal → Dec orientation → Apr SDR → May onsite testing → June white paper.  
-* Include labor allocation across subteams, sprint cadence, holiday impacts.  
-* **Team Input Needed:** Confirmed sprint schedule, academic calendar conflicts.  
-*   
-  \--------  
-* **Method**: 2‑week sprints, GitHub issues, weekly demos.  
-   **Key dates from SUITS**: **Orientation** Dec 11, 2025; **Software Design Review** Apr 2, 2026; **Onsite testing** May 2026; **White paper** June 2026.   
-* **Milestones**  
-* **Dec–Jan**: TSS client \+ UI shells (PR & EV); core map.  
-* **Feb**: Search pattern \+ EV navigation \+ procedures; C/W alerts.  
-* **Mar**: LTV repair flow \+ AI guardrails \+ range/turnaround; night tests.  
-* **Apr**: SDR delivery \+ E2E tests; fix list burn‑down.  
-* **May**: JSC runbook & rehearsal; onsite tests; telemetry logs.  
-* **June**: White paper & code wrap.  
-  \---------
+**Method**: 2‑week sprints, GitHub issues, weekly demos.  
+ **Key dates from SUITS**: **Orientation** Dec 11, 2025; **Software Design Review** Apr 2, 2026; **Onsite testing** May 2026; **White paper** June 2026. 
+
+**Milestones**  
+**Dec–Jan**: TSS client \+ UI shells (PR & EV); core map.  
+**Feb**: Search pattern \+ EV navigation \+ procedures; C/W alerts.  
+**Mar**: LTV repair flow \+ AI guardrails \+ range/turnaround; night tests.  
+**Apr**: SDR delivery \+ E2E tests; fix list burn‑down.  
+**May**: JSC runbook & rehearsal; onsite tests; telemetry logs.  
+**June**: White paper & code wrap.
 
 Tasks:
 
@@ -300,7 +292,7 @@ Tasks:
 
 ### **5.7 Human-in-the-Loop Testing** 
 
-We will test bi‑weekly from Jan–Apr with night/low‑light outdoor trials and TSS‑simulated streams. Metrics include task completion time, path accuracy, hazard‑avoidance rate, warning response time, and NASA‑TLX workload. Safety measures include PPE, spotters, terrain briefs, device straps/covers, and controlled lighting. Findings directly gate feature graduation to Test Week readiness.
+We will test bi‑weekly from January through April with night/low‑light outdoor trials and TSS‑simulated streams. Metrics include task completion time, path accuracy, hazard‑avoidance rate, warning response time, and NASA‑TLX workload. Safety measures include Personal Protective Equipment (PPE), spotters, terrain briefs, device straps/covers, and controlled lighting. Findings directly gate feature graduation to Test Week readiness.
 
 **Purpose**: Show our UI and Athena reduce workload and errors for each mission phase in **night/low‑light** outdoor trials, with TSS simulated streams. 
 
@@ -314,10 +306,9 @@ We will test bi‑weekly from Jan–Apr with night/low‑light outdoor trials an
 * **Mar 21** – Cognitive‑load study: NASA‑TLX across phases; goal: **\<40** median.  
 * **Apr 4** – Full end‑to‑end simulation; log review and bug‑burn. Targets: zero critical defects; all “shall” features pass a checklist.
 
-**Participants & safety**
+**Participants and Privacy**
 
-* 12–18 participants (students) for repeated‑measures tests; PPE; night lighting set to Rock Yard‑like levels; radio spotter for obstacles.  
-* Privacy: voice logs anonymized; consent forms on file.
+Twelve to eighteen healthy adult participants will be recruited for each test from University of Colorado Boulder students and faculty. The team will aim to include participants with relevant technical backgrounds (such as Bioastronautics and UI/UX design, for more informed feedback), as well as those with other technical and non-technical backgrounds, to ensure the technology is understandable to a broad audience. Participant privacy will be well-protected with the anonymization of any voice logs, and through the use of consent forms. 
 
 **How results feed development**
 
@@ -341,8 +332,6 @@ Tasks:
 * **Tasks**: UIA egress; nav to LTV; ERM→Diagnosis→Nav restart→Physical repair; ingress.  
 * **Measures**: time‑to‑complete; error counts; NASA‑TLX; situation awareness (SAGAT‑lite); alert ACK latency.  
 * **Safety**: low‑speed movement; spotters; terrain brief; device straps & covers; night lighting controls.
-
-For each test, the team plans to recruit 8-12 healthy adults, with a mix of both technical and non-technical backgrounds. 
 
 ### **5.8 Technical References** 
 

@@ -71,7 +71,7 @@ README.md
 ## Architecture (Mermaid)
 
 ```mermaid
-{
+
 
 flowchart LR
 
@@ -121,7 +121,7 @@ API -. rover cmds .-> TSS
 TSS <--> LTV
 TSS <--> UIA_DC
 
-}}
+}
 ```
 
 ---

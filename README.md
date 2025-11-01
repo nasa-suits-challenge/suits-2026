@@ -25,12 +25,16 @@ cp .env.example .env
 
 # 2) Install toolchains (Node 20+, Python 3.10+, .NET 8+)
 
-# 3) Build & run the Orchestrator API
-cd services/orchestrator-api
-npm ci
-npm run dev  # http://localhost:8787/health
+# 3) Install workspace dependencies (links local packages such as libs/tss-client-ts)
+npm install
 
-# 4) Open the simple PR UI (served statically by the API at /ui)
+# 4) Build the shared TSS client once so the orchestrator can import it
+npm run build -w libs/tss-client-ts
+
+# 5) Start the Orchestrator API (served at http://localhost:8787)
+npm run dev -w services/orchestrator-api
+
+# 6) Open the simple PR UI (served statically by the API at /ui)
 #    Then try IMU query via API proxy:
 curl http://localhost:8787/api/tss/imu?ev=1
 ```

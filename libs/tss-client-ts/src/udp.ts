@@ -1,10 +1,10 @@
-import dgram from 'dgram';
+import { createSocket } from 'node:dgram';
 
 const BE_U32 = (buf: Buffer, off: number) => buf.readUInt32BE(off);
 const BE_F32 = (buf: Buffer, off: number) => buf.readFloatBE(off);
 
 export class UdpClient {
-  private socket = dgram.createSocket('udp4');
+  private socket = createSocket('udp4');
   constructor(private host: string, private port: number) {}
 
   request(command: number, payload?: Buffer): Promise<Buffer> {
@@ -20,7 +20,7 @@ export class UdpClient {
         resolve(rbuf);
       };
       this.socket.on('message', onMessage);
-      this.socket.send(msg, this.port, this.host, (err) => {
+      this.socket.send(msg, this.port, this.host, (err: Error | null) => {
         if (err) {
           this.socket.off('message', onMessage);
           reject(err);

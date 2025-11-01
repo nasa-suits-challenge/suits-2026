@@ -33,6 +33,9 @@ npm run build -w libs/tss-client-ts
 
 # 5) Start the Orchestrator API (served at http://localhost:8787)
 npm run dev -w services/orchestrator-api
+#    or build then run the compiled server:
+#    npm run build -w services/orchestrator-api
+#    npm run start -w services/orchestrator-api
 
 # 6) Open the simple PR UI (served statically by the API at /ui)
 #    Then try IMU query via API proxy:

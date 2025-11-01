@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 import * as dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -11,6 +11,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = Number(process.env.PORT || 8787);
+const PR_UI_PATH = path.resolve(__dirname, '../../../apps/pr-ui');
 
 const cfg = {
   host: process.env.TSS_HOST || '127.0.0.1',
@@ -21,11 +22,11 @@ const cfg = {
 
 const tss = new TssClient(cfg as any);
 
-app.get('/health', (_req, res) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.json({ ok: true, ts: Date.now(), transport: cfg.transport });
 });
 
-app.get('/api/tss/imu', async (req, res) => {
+app.get('/api/tss/imu', async (req: Request, res: Response) => {
   try {
     const ev = Number(req.query.ev || 1) === 2 ? 2 : 1;
     const imu = await tss.getImu(ev as any);
@@ -36,7 +37,7 @@ app.get('/api/tss/imu', async (req, res) => {
 });
 
 // Serve the static PR UI (apps/pr-ui)
-app.use('/ui', express.static(path.resolve(__dirname, '../../apps/pr-ui')));
+app.use('/ui', express.static(PR_UI_PATH));
 
 app.listen(PORT, () => {
   console.log(`Orchestrator API on http://localhost:${PORT}`);

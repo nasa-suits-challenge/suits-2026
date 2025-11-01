@@ -74,54 +74,54 @@ README.md
 
 
 flowchart LR
+  classDef ext fill:#f9f9f9,stroke:#888,stroke-dasharray:3 3,color:#333;
+  classDef svc fill:#eef,stroke:#335,color:#111;
+  classDef hw  fill:#ffe,stroke:#b90,color:#111;
 
-classDef ext fill:#f9f9f9,stroke:#888,stroke-dasharray:3 3,color:#333;
-classDef svc fill:#eef,stroke:#335,color:#111;
-classDef hw  fill:#ffe,stroke:#b90,color:#111;
+  subgraph PR[Pressurized Rover Operator]
+    UI_PR[PR Frontend]:::svc
+  end
 
-subgraph PR[Pressurized Rover Operator]
-  UI_PR[PR Frontend]:::svc
-end
+  subgraph EVA[EVA Crewmember]
+    HMD[Pass-through AR HMD]:::hw
+    TAB[Wrist Tablet]:::hw
+  end
 
-subgraph EVA[EVA Crewmember]
-  HMD[Pass-through AR HMD]:::hw
-  TAB[Wrist Tablet]:::hw
-end
+  subgraph BE[Backend Host / Orchestrator / laptop]
+    API[Orchestrator API]:::svc
+    MAP[World-State / Map Service]:::svc
+    PF[Pathfinding A*]:::svc
+    LID[LIDAR / Point-cloud Proc.]:::svc
+    AIA[Athena AI RAG/Guardrails]:::svc
+    TPQ[Task Priority Queue]:::svc
+  end
 
-subgraph BE[Backend Host / Orchestrator / laptop]
-  API[Orchestrator API]:::svc
-  MAP[World‑State / Map Service]:::svc
-  PF[Pathfinding A*]:::svc
-  LID[LIDAR / Point-cloud Proc.]:::svc
-  AIA[Athena AI RAG/Guardrails]:::svc
-  TPQ[Task Priority Queue]:::svc
-end
+  TSS[(Telemetry Stream Server<br/>WebSocket)]:::ext
+  DUST[DUST Unreal Simulator]:::ext
+  UIA_DC[UIA/DCU Switches]:::ext
+  LTV[LTV / Beacons & POIs]:::ext
 
-TSS[(Telemetry Stream Server\nWebSocket)]:::ext
-DUST[DUST Unreal Simulator]:::ext
-UIA_DC[UIA/DCU Switches]:::ext
-LTV[LTV / Beacons & POIs]:::ext
+  UI_PR <--> API
+  HMD   <--> API
+  TAB   <--> API
 
-UI_PR <--> API
-HMD <--> API
-TAB <--> API
+  API <--> PF
+  API <--> LID
+  API <--> TPQ
+  API <--> AIA
+  API <--> MAP
 
-API <--> PF
-API <--> LID
-API <--> TPQ
-API <--> AIA
-API <--> MAP
+  MAP <--> TSS
+  API <--> TSS
 
-MAP <--> TSS
-API <--> TSS
+  DUST -. "sim state/map tiles" .-> MAP
+  API  -. "rover cmds" .-> TSS
 
-DUST -. sim state/map tiles .-> MAP
-API -. rover cmds .-> TSS
+  TSS <--> LTV
+  TSS <--> UIA_DC
 
-TSS <--> LTV
-TSS <--> UIA_DC
 
-}
+
 ```
 
 ---

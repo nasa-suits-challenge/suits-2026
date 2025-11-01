@@ -1,4 +1,4 @@
-import WebSocket from 'ws';
+import WebSocket, { RawData } from 'ws';
 
 export class WsClient {
   private ws?: WebSocket;
@@ -12,13 +12,23 @@ export class WsClient {
     });
   }
 
-  async subscribe(topic: string, onData: (json: any) => void) {
+  async subscribe(topic: string, onData: (json: unknown) => void) {
     if (!this.ws) throw new Error('Not connected');
-    this.ws.on('message', (data) => {
+    this.ws.on('message', (data: RawData) => {
       try {
-        const json = JSON.parse(data.toString());
-        if (json?.topic === topic) onData(json);
-      } catch {}
+        const parsed = JSON.parse(data.toString()) as unknown;
+        if (
+          typeof parsed === 'object' &&
+          parsed !== null &&
+          'topic' in parsed &&
+          typeof (parsed as { topic: unknown }).topic === 'string' &&
+          (parsed as { topic: string }).topic === topic
+        ) {
+          onData(parsed);
+        }
+      } catch {
+        // Ignore malformed frames
+      }
     });
     this.ws.send(JSON.stringify({action: 'subscribe', topic}));
   }

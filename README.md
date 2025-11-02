@@ -144,6 +144,7 @@ You can generate local telemetry without DUST by running the CAPCOM reference se
 
 1. In the first terminal, start the server in local mode:
    ```bash
+   git clone git@github.com:nasa-suits-challenge/TSS-2025.git
    cd TSS-2025
    ./.server --local
    ```

@@ -38,11 +38,17 @@ export class UdpClient {
     return BE_F32(buf, 8);
   }
 
-  static parseLidar13(buf: Buffer): number[] {
-    // [ts(4)][cmd(4)][13 * float(4)]
-    const out: number[] = [];
-    for (let i = 0; i < 13; i++) {
-      out.push(BE_F32(buf, 8 + i * 4));
+  static parseBoolean(buf: Buffer) {
+    // [ts(4)][cmd(4)][int32]
+    return BE_U32(buf, 8) !== 0;
+  }
+
+  static parseFloatArray(buf: Buffer): number[] {
+    // [ts(4)][cmd(4)][n * float(4)]
+    const count = Math.max(0, (buf.length - 8) / 4);
+    const out: number[] = new Array(count);
+    for (let i = 0; i < count; i++) {
+      out[i] = BE_F32(buf, 8 + i * 4);
     }
     return out;
   }
@@ -60,5 +66,7 @@ export const CMD = {
   IMU_EV2_POSY: 21,
   IMU_EV2_HEADING: 22,
   ROVER_START: 23,
-  LIDAR_13: 172,
+  PR_TELEMETRY_BASE: 124,
+  PR_TELEMETRY_END: 171,
+  PR_LIDAR: 172,
 };

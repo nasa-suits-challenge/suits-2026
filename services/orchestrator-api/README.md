@@ -38,6 +38,7 @@ steps to get it running locally.
 
 - Health check: `curl http://localhost:8787/health`
 - Sample IMU request: `curl "http://localhost:8787/api/tss/imu?ev=1"`
+- Full PR telemetry block: `curl http://localhost:8787/api/tss/pr-telemetry`
 - Static PR UI: open `http://localhost:8787/ui/`
 
 ## Notes

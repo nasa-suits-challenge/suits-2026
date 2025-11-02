@@ -135,8 +135,23 @@ flowchart LR
 
 ### TSS setup (local dev)
 
-- **FY25 CAPCOM TSS C server**: build + run, then browse to the IP/port shown to inspect live values. UDP command interface on the same IP/port (big‑endian 32‑bit timestamp + command). See `/libs/tss-client-ts` for a working adapter.  
+- **FY25 CAPCOM TSS C server**: build + run, then browse to the IP/port shown to inspect live values. UDP command interface on the same IP/port (big‑endian 32‑bit timestamp + command). See `/libs/tss-client-ts` for a working adapter.
 - **FY26 ws (if provided)**: set `TSS_TRANSPORT=ws` and `TSS_WS_URL=ws://...`.
+
+#### Simulate telemetry with the FY25 CAPCOM server
+
+You can generate local telemetry without DUST by running the CAPCOM reference server and simulator:
+
+1. In the first terminal, start the server in local mode:
+   ```bash
+   cd TSS-2025
+   ./.server --local
+   ```
+2. In a second terminal, launch the position simulator pointed at the local server:
+   ```bash
+   cd TSS-2025
+   python simulate_position.py localhost
+   ```
 
 See **docs/ARCHITECTURE.md** for command maps and telemetry bindings.
 

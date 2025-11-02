@@ -36,6 +36,15 @@ app.get('/api/tss/imu', async (req: Request, res: Response) => {
   }
 });
 
+app.get('/api/tss/pr-telemetry', async (_req: Request, res: Response) => {
+  try {
+    const telemetry = await tss.getPressurizedRoverTelemetry();
+    res.json({ telemetry });
+  } catch (e: any) {
+    res.status(500).json({ error: e?.message || 'PR telemetry error' });
+  }
+});
+
 // Serve the static PR UI (apps/pr-ui)
 app.use('/ui', express.static(PR_UI_PATH));
 

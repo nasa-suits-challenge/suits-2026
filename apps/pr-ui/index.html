@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PR UI — TUXEDO</title>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem; }
+      .card { border: 1px solid #ddd; border-radius: 8px; padding: 1rem; max-width: 720px; }
+      .row { display: flex; gap: 1rem; align-items: center; }
+      .monospace { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+      button { padding: .6rem 1rem; }
+      .badge { background: #eef; border: 1px solid #99c; padding: .2rem .5rem; border-radius: .4rem; }
+    </style>
+  </head>
+  <body>
+    <h1>Pressurized Rover UI — Demo</h1>
+    <div class="card">
+      <div class="row"><span>Transport:</span><span id="t" class="badge"></span></div>
+      <p>Click to query IMU via Orchestrator API and show <code>POSX, POSY, HEADING</code>.</p>
+      <div class="row">
+        <button onclick="queryImu(1)">EV1 IMU</button>
+        <button onclick="queryImu(2)">EV2 IMU</button>
+      </div>
+      <pre id="out" class="monospace"></pre>
+    </div>
+
+    <div class="card" style="margin-top: 1.5rem;">
+      <h2>Pressurized Rover Telemetry</h2>
+      <p>Fetch the full PR telemetry block (commands 124–172) via the orchestrator.</p>
+      <button onclick="queryPrTelemetry()">Query PR Telemetry</button>
+      <pre id="pr-out" class="monospace"></pre>
+      <p><small>Static demo — replace with your real PR UI later.</small></p>
+    </div>
+
+    <script>
+      async function health(){
+        const res = await fetch('/health');
+        const j = await res.json();
+        document.getElementById('t').textContent = j.transport;
+      }
+      async function queryImu(ev=1){
+        const outEl = document.getElementById('out');
+        outEl.textContent = 'Loading…';
+        try {
+          const res = await fetch(`/api/tss/imu?ev=${ev}`);
+          const body = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            throw new Error(body.error || res.statusText);
+          }
+          outEl.textContent = JSON.stringify(body, null, 2);
+        } catch (err) {
+          outEl.textContent = `Error: ${err instanceof Error ? err.message : String(err)}`;
+        }
+      }
+
+      async function queryPrTelemetry(){
+        const outEl = document.getElementById('pr-out');
+        outEl.textContent = 'Loading…';
+        try {
+          const res = await fetch('/api/tss/pr-telemetry');
+          const body = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            throw new Error(body.error || res.statusText);
+          }
+          outEl.textContent = JSON.stringify(body, null, 2);
+        } catch (err) {
+          outEl.textContent = `Error: ${err instanceof Error ? err.message : String(err)}`;
+        }
+      }
+      health();
+    </script>
+  </body>
+</html>
